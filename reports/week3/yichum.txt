@@ -1,1 +1,15 @@
-To be completed
+Goals from last week:
+	N/A
+Progress made this week:
+	- completed some project background research (looked into Raptor Code)
+	- set up email list
+	- set up google drive
+	- organized Git repo
+	- spent time thinking about what the minimum viable product, final product, and stretch goals can be
+Plans for next week:
+	- look into the difficulty of building an IDE plugin
+	- look into the difficulty of building a separate UI
+	- look into the difficulty of building an API that can potentially achieve the funcationalities we want
+	- have more conversation about the project design and vision with other teammates
+	- work on potentially setting up TFS
+

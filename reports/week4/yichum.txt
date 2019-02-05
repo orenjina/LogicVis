@@ -6,10 +6,12 @@ Progress made this week:
 	- set up google drive
 	- organized Git repo
 	- spent time thinking about what the minimum viable product, final product, and stretch goals can be
-Plans for next week:
-	- look into the difficulty of building an IDE plugin
-	- look into the difficulty of building a separate UI
-	- look into the difficulty of building an API that can potentially achieve the funcationalities we want
-	- have more conversation about the project design and vision with other teammates
-	- work on potentially setting up TFS
+	- attended multiple meetings with the group
+	- participated in the conversation of changing the project direction
 
+Plans for next week:
+	- work on changing the project proposal
+	- look into the difficulty of building a separate UI
+	- finalize more details about the project design and vision with other teammates
+	- work on potentially setting up TFS
+	- starting looking at building abstract shapes

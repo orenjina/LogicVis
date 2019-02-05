@@ -15,3 +15,5 @@ Plans for next week:
 	- finalize more details about the project design and vision with other teammates
 	- work on potentially setting up TFS
 	- starting looking at building abstract shapes
+	[long term]
+	- finish a function that takes in a recursion function and output the graph

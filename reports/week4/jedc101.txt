@@ -4,6 +4,7 @@ N/A
 
 Progress
 ---------
+ - Wrote up the proposal's risks and limitations
  - We found that our goal was too broad, so we went back to the drawing board
  - Re-focused our software on recursion as a tool to help people learn about it
  - We still have difficulty in planning meetings

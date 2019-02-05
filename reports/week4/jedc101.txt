@@ -12,10 +12,8 @@ Progress
 This Week's Goals
 ------------------
  - Revise our proposal to better reflect our newly revised product
- - Make an understandable flowchart that represents a recursive call
- - Complete an initial mockup of our final product
- - Research the required technologies to implement our product
+ 
+ Assign the following work:
  - Prepare a presentation for class
-
  - [Weekend goal] Begin implementation of the software
  - [Long term] Test our mockup to identify the most important features

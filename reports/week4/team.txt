@@ -1,0 +1,19 @@
+Goals last week: N/A
+
+Progress this week:
+1. Changed proposal to specify on the purpose of the project: a recursive approach
+2. Divided into sub-groups temporarily
+3. Determined the general direction of the implementation details
+4. Organized communication logistics of the group
+
+Goals for the next week:
+1. Look into parsing tools (IMPLEM)
+2. Decide on how to do variable tracking (IMPLEM)
+3. Weekly report and TA meeting agenda (EVAL)
+4. User studies(EVAL)
+
+TA meeting agenda:
+1. Discuss if there are any problems with the new proposal and implementation plan
+2. Confirm user studies and other evaluation techniques and whether they are 
+effective
+

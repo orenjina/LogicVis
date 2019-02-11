@@ -1,0 +1,23 @@
+Last Week's Goals
+------------------
+- Revise our proposal to better reflect our newly revised product
+ 
+ Assign the following work:
+ - Prepare a presentation for class
+ - [Weekend goal] Begin implementation of the software
+ - [Long term] Test our mockup to identify the most important features
+ 
+Progress
+---------
+ - Discussion and revisions for the new goal we had in mind
+ - Made a paper prototype in preparation for the presentation
+ - Created a usability test for our product
+ - With the snow, it has been difficult to hold team meetings in person
+ - Joined the Evaluation team with Glenn (others on Implementation team)
+
+This Week's Goals
+------------------
+ - [Me] Perform some usability tests with our product and improve the UI based on feedback
+ - [Glenn] Continue revisions to the proposal/report
+ - [Evaluation Team] Assemble the initial User Manual
+ - [Implementation Team] Identify and assign work for the implementation of the product

@@ -1,0 +1,15 @@
+Section 1: Previous Week's Plan:
+- Have a clear idea on the project
+- Have a detailed list of goals to accomplish in this project
+- Have tasks distributed to members
+- Getting to work on the tasks assigned
+
+Section 2: This Week's Progress
+- Discussed abou the project
+- Milestones and timelines established
+- Team members separated into two groups
+- Finished Presentation Slides
+
+Section 3: Next Week's Plan
+- Start implementing the parsing part of the project
+- Present our project

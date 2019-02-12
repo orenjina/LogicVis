@@ -1,0 +1,19 @@
+Last Week's Goals
+------------------
+- We need to work on the specification in which we need to specify what functions we need to have and what do these functions do. 
+- We need to work on parsing the java code input.
+- Keep revising the proposal.
+
+Progress
+---------
+- Assigned roles and work for each team member.
+- Split the team into two parts: evaluation and implementation 
+- Revise the objective motivation and approach in our proposal.
+- Build the architecture diagram of our project.
+- Finished the mockup of what the final project will look like.
+
+This Week's Goals
+------------------
+- Finalize on a working direction for the project (rolled over).
+- Implement parsing and extract the recursion function.
+- Finish the prototype graph generator.

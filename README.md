@@ -1,4 +1,4 @@
 # LogicVis
 
 See user manual here:
-[User Manual](/User_Manual.pdf)
+[User Manual](/User%20Manual.pdf)

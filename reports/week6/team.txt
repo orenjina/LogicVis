@@ -9,12 +9,12 @@ Progress this week:
 2. One user studies case on basic utilities (EVAL)
 3. Specified more about techniques to help students learn recursion (EVAL)
 4. Edited proposal sections that are affected by previous changes (EVAL)
-5.
+5. User Manual first draft completed (ALL)
 
 Goals for the next week:
 1. Continue to add user studies to support the claim if necessary (EVAL)
-2. Compare different implementation options and research on their effectiveness if necessary (EVAL)
-3.
+2. Compare different UI options and research their effectiveness if necessary (EVAL)
+3. 
 
 TA meeting agenda:
 1. Discuss user studies and other evaluation responsibilities

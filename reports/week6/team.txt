@@ -10,11 +10,15 @@ Progress this week:
 3. Specified more about techniques to help students learn recursion (EVAL)
 4. Edited proposal sections that are affected by previous changes (EVAL)
 5. User Manual first draft completed (ALL)
+6. Looked into tools for parsing java code, and found most frequently used JavaParser (IMPLEM)
+7. Started reading JavaParser manual (IMPLEM)
+8. Spent time learning about shape abstract however does not seem too useful with how JavaParser is set up (IMPLEM)
+9. Learned about how to set up Maven to be the build of our project (IMPLEM)
 
 Goals for the next week:
 1. Continue to add user studies to support the claim if necessary (EVAL)
 2. Compare different UI options and research their effectiveness if necessary (EVAL)
-3. 
+3. Implement the parsing tool hopefully from the JavaParser API (IMPLEM)
 
 TA meeting agenda:
 1. Discuss user studies and other evaluation responsibilities

@@ -1,4 +1,4 @@
-public class testCode{
+public class testCode {
     public int recur() {
         int a = 0;
         a = a + 1;

@@ -1,0 +1,48 @@
+Goals from last week:
+	- work on implementing shapes
+	- work on doing research of parsing code data
+
+Progress made this week:
+    - attended meetings and went to office hours with the group
+    - contributed to the finalization of the design (removing static/dynamic cases and just have one design)
+    - set up Maven
+    - found JavaParser as a tool and added to the Maven dependency
+    - spent a long time reading the JavaParser manual to understand their AST concept, methods and classes
+    - implemented getAllMethods and getMethod completely
+    - implemented partially traverse
+    - spent time thinking about how to represent the graph
+
+    test code:
+    public class testCode {
+        public int recur() {
+            int a = 0;
+            a = a + 1;
+            if (a >= 0) {
+                a++;
+            } else {
+                a--;
+            }
+            for (int i = 0; i < 5; i++) {
+                a++;
+            }
+            return a;
+        }
+    }
+
+    current result:
+    Statement 0: int a = 0;
+    Statement 1: a = a + 1;
+    Statement 2: if (a >= 0) {
+        a++;
+    } else {
+        a--;
+    }
+    Statement 3: for (int i = 0; i < 5; i++) {
+        a++;
+    }
+    Statement 4: return a;
+
+Plans for next week:
+    - work on parsing special cases (if/else, loops, etc.)
+    - work on potentially implementing our own tree structure or using the API one to build graph
+

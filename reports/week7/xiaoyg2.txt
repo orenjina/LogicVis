@@ -1,0 +1,15 @@
+Last Week's Goals
+------------------
+- Implement parsing and extract the recursion function.
+- Finish the prototype graph generator.
+
+Progress
+---------
+- Finished the prototype graph generator.
+- Finalize on one mode for logic graph generator.
+- Revised the mockup
+
+This Week's Goals
+------------------
+- Implement the Java function parsing
+- Research on control flow generating code.

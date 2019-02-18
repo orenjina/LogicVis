@@ -1,0 +1,22 @@
+Last Week's Goals
+------------------
+ - Finalize on a working direction for the project (rolled over)
+ - Write the user manual
+ - Finalize the design for the GUI
+
+Progress
+---------
+ - Meetings with staff and peer
+ - Drafted then Re-wrote the user testing section
+ - Revised our approach section
+ - Edited motivation and current works section
+ - Fixed miscellaneous errors from the feedback (like user manual link issue)
+ - Focused on a working direction for the project
+ - Looked into user studies, awaiting feedback from staff regarding methodology and methods
+
+This Week's Goals
+------------------
+ - Get a close to perfect project proposal finalized
+ - Finalize on a working direction for the project (rolled over) (May be done, but await confirmation from the staff)
+ - Make sure user manual and build tools are up to standards
+ - Do further user testing according to the feedback that will be given this week

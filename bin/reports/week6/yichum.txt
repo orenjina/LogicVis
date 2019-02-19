@@ -1,0 +1,19 @@
+Goals from last week:
+	- work on changing the project proposal
+	- look into the difficulty of building a separate UI
+	- finalize more details about the project design and vision with other teammates
+	- work on potentially setting up TFS
+	- starting looking at building abstract shapes
+	[long term]
+	- finish a function that takes in a recursion function and output the graph
+
+Progress made this week:
+	- made improvements on the project proposal and the general direction of the project
+	- designed architectures
+	- closed up on steps for implementation
+	- started thinking about/doing research on visualization/abstractions for shapes
+	- attended meetings with individuals to discuss implementation
+
+Plans for next week:
+	- work on implementing shapes
+	- work on doing research of parsing code data

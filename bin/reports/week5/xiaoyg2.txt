@@ -1,0 +1,14 @@
+Previous week:
+
+We successful designed visual components of the graphs and started working on the specification and finished our proposal. However, our TA pointed out several drawbacks of our proposal such as our approach to the project is not clear to solve the problem we pointed out. 
+
+This week:
+We have already revised our proposal to make it only focus on solving one problem – helping programmer understand recursion. I learned that, when writing a proposal, we should be clear that how our project is going to solve the problem we said. The motivation and objective of our project was to help programmers understand the code better, but our approach to generate control flow over the code does not specify how to solve the problem. Instead, we narrow down our objective to help programmers understand that recursion better. We solve this also by generating a graph for recursive function. We have also designed what type of graph to generate to represent the recursive function in a more readable way.
+
+Next week:
+The progress we need to make this week is to work on the specification in which we need to specify what functions we need to have and what do these functions do. On top of this, we need to work on parsing the java code input.
+
+Agenda for meeting:
+Monday 7:30 – 10 pm
+Friday 10:30 am – 12:20 pm
+

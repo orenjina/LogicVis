@@ -1,0 +1,23 @@
+Last Week's Goals
+------------------
+ - Finalize on a working direction for the project
+ - Finish up the revised version of the project proposal
+ - Finish designing the general implementation details
+ - Start working on the specifics of the implementation
+ - Assign general roles and work for each team member
+
+Progress
+---------
+ - Assigned roles and work for each team member
+ - Finished designing general implementation details
+ - The project design of the team was found to be problematic due to its generality once again; the project design is now altered the second time to cater more specifically towards handling recursion
+ - Wrote up about the new motivation, objectives, current and our approach, schedule, risks, and testing
+ - Still awaiting on responses on how the current document is
+
+This Week's Goals
+------------------
+ - Finalize on a working direction for the project (rolled over)
+ - Write the user manual
+ - Finalize the design for the GUI
+ - Help implement line parsing
+ - Help implement recursive parsing

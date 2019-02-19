@@ -1,0 +1,19 @@
+Last Week's Goals
+------------------
+ - [Me] Perform some usability tests with our product and improve the UI based on feedback
+ - [Glenn] Continue revisions to the proposal/report
+ - [Evaluation Team] Assemble the initial User Manual
+ - [Implementation Team] Identify and assign work for the implementation of the product
+ 
+Progress
+---------
+ - Wrote up "Using the System" part of the user manual (with Leo)
+ - Gave customer feedback to another project group
+
+This Week's Goals
+------------------
+- [ALL] Revise the report and user manual
+- [EVAL] Create a specific procedure for usability tests to discern the effectiveness of our tool
+- [EVAL] Write an assessment on the effectiveness of our tool and relay important points to the implementation team
+- [ME] Update our paper prototype before testing
+- [ME] If needed, tweak the UI based on feedback

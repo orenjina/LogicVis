@@ -1,0 +1,13 @@
+Section 1: Previous Week's Plan:
+- Start implementing the parsing part of the project
+- Present our project
+
+
+Section 2: This Week's Progress
+- Project presented
+- Proposal and user manual further revised
+- Started implementing basic UI with JavaFX
+
+Section 3: Next Week's Plan
+- Implement the basic ui.
+- Start working on generating graph.

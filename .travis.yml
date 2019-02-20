@@ -2,4 +2,4 @@ language: java
 sudo: false
 services:
  - mongodb
-script: mvn clean verify
+script: mvn clean install

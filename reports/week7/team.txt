@@ -9,10 +9,17 @@ Progress this week:
 3. Altered our approach to be clearer on the reasoning. (EVAL)
 4. Added more details including diagrams for current work comparisons (IMPLEM) and edited (EVAL).
 5. Made build paths for the project (IMPLEM)
+6. Maven Setup (IMPLEM)
+7. Basic UI page half done with JavaFX. (IMPLEM)
+8. Found JavaParser as a tool and added to the Maven dependency (IMPLEM)
+9. Implemented getAllMethods and getMethod completely (IMPLEM)
+10. Implemented partially traverse (IMPLEM)
+11. Be able to parse the code in a text form in to a data structure. (IMPLEM)
 
 Goals for the next week:
 1. Look into user manual and make changes on the given comments (Both)
-2. 
+2. Finish up on basic UI page. (IMPLEM)
+3. Find graph generation methods, hopefully with an api. (IMPLEM)
 
 TA meeting agenda:
 1. Discuss flaws of user manual if necessary

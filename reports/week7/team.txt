@@ -20,6 +20,7 @@ Goals for the next week:
 1. Look into user manual and make changes on the given comments (Both)
 2. Finish up on basic UI page. (IMPLEM)
 3. Find graph generation methods, hopefully with an api. (IMPLEM)
+4. Edit docs according to feedback (EVAL)
 
 TA meeting agenda:
 1. Discuss flaws of user manual if necessary

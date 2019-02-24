@@ -13,8 +13,8 @@ import javafx.stage.Stage;
 
 public class LogicVisView extends Application {
 	
-	private static int x = 640;
-	private static int y = 480;
+	private static int x = 960;
+	private static int y = 720;
 	
 	@Override
     public void start(Stage stage) {
@@ -34,6 +34,10 @@ public class LogicVisView extends Application {
 		Label valueLabel = new Label();
 		valueLabel.setPrefSize(x * 0.1, y * 0.05);
 		valueLabel.setText("Value Input:");
+		
+		Label inputLabel = new Label();
+		inputLabel.setPrefSize(x * 0.1, y * 0.05);
+		inputLabel.setText("Code Input:");
 		
 		// configuring button
 		Button button = new Button();
@@ -77,8 +81,12 @@ public class LogicVisView extends Application {
 		AnchorPane.setLeftAnchor(valueLabel, x * 0.45);
 		AnchorPane.setTopAnchor(valueLabel, y * 0.65);
 		
+		// inputLabel
+		AnchorPane.setLeftAnchor(inputLabel, x * 0.08);
+		AnchorPane.setTopAnchor(inputLabel, y * 0.05);
+		
 		// adding button to the pane
-		layout.getChildren().addAll(button, inputText, valueText, valueLabel);
+		layout.getChildren().addAll(button, inputText, valueText, valueLabel, inputLabel);
 		
 		// set scene
 		Scene scene = new Scene(layout, x, y);

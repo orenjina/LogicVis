@@ -4,11 +4,10 @@ public class testCode {
         a = a + 1;
         if (a >= 0) {
             a++;
-        } else {
+        } else if (a == 1){
             a--;
-        }
-        for (int i = 0; i < 5; i++) {
-            a++;
+        } else {
+            a = 0;
         }
         return a;
     }

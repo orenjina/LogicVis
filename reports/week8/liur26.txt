@@ -1,0 +1,13 @@
+Section 1: Previous Week's Plan:
+- Implement the basic ui.
+- Start working on generating graph.
+
+
+Section 2: This Week's Progress
+- Basic UI Implemented.
+- Research done on generating graph.
+	- No feasible api found for generating graph
+	- Need to generate manually, with "Canvas"
+
+Section 3: Next Week's Plan
+- Work on generating graph from data structure parsed from code.

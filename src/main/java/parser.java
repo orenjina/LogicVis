@@ -15,6 +15,7 @@ enum Type {
     NONE, CONDITION, RETURN
 }
 
+// parser class that currently takes in a file containing a class, which should contain the user input class.
 public class parser {
     private CompilationUnit cu;
 
@@ -132,28 +133,45 @@ public class parser {
     }
 
     private Node forOPerations(ForStmt forst, Set<Node> endNodes) {
+        // INITIALIZATION
         NodeList<Expression> init = forst.getInitialization();
         List<Node> lastOne = new ArrayList<>();
         Node root = listExpOperations(init, lastOne);
+        // assuming the initialization of a for loop should only contain one edge at the end
         Node last = lastOne.get(lastOne.size()-1);
+
+        // CONDITION
         Node cond = new Node(Type.CONDITION, forst.getCompare().get().toString());
         last.addChild(cond, ""); // added if condition
         // for operation always ends on the if condition
         endNodes.add(cond);
+
+        // LOOP BODY
         Set<Node> tempEndNodes = new HashSet<>();
         Node trueBranch = oneStmtDispatch(forst.getBody(), tempEndNodes);
         cond.addChild(trueBranch, "True");
+
+        // UPDATE
         lastOne.clear();
         Node update = listExpOperations(forst.getUpdate(), lastOne);
+        // assuming the update of a for loop should only contain one edge at the end
         last = lastOne.get(lastOne.size()-1);
         tempEndNodes.forEach(n -> n.addChild(update, ""));
         last.addChild(cond, "");
         return root;
     }
 
+    // The official tree(implemented as a pure Node class) for the output tree structure
     public class Node {
+        // Content is the string that should be shown in the shape. currently it just takes what is given and show it
+        // directly with no modification (example: int x = 0; will be added directly as content)
         private String content;
+
+        // Type is an Enum (see top). Front end should be utilizing the type to build shapes accordingly
         private Type t;
+
+        // Maps child node to its edge label (example: if condition, labels could be "True" or "False"). When no
+        // label needed, the value is set to be "".
         private HashMap<Node, String> children;
 
         public Node (Type t, String content) {

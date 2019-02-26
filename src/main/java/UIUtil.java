@@ -1,5 +1,6 @@
 import javafx.scene.canvas.GraphicsContext;
 
+// a util class
 public class UIUtil {
 	public static void drawStart(GraphicsContext gc, double pos_x, double pos_y, double scale_x, double scale_y) {
 		gc.strokeOval(pos_x, pos_y, scale_x, scale_y);

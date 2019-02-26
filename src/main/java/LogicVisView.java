@@ -1,3 +1,5 @@
+import java.util.Map;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -39,6 +41,17 @@ public class LogicVisView extends Application {
 		inputLabel.setPrefSize(x * 0.1, y * 0.05);
 		inputLabel.setText("Code Input:");
 		
+		// configuring TextField
+		TextField inputText = new TextField();
+		inputText.setPrefSize(x * 0.32, y * 0.5);
+		
+		TextField valueText = new TextField();
+		valueText.setPrefSize(x * 0.1, y * 0.05);
+		
+		TextField outText = new TextField();
+		outText.setPrefSize(x * 0.32, y * 0.5);
+		outText.setEditable(false);
+		
 		// configuring button
 		Button button = new Button();
 		button.setText("Let's Do It!");
@@ -47,19 +60,16 @@ public class LogicVisView extends Application {
 			@Override
 			public void handle(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				System.out.println("clicked");
+				String input = inputText.getText();
+				String filename = valueText.getText();
+				if (input != null && filename != null) {
+					outText.setText(input + filename);
+				}
 			}
 			
 		});
 		
 		button.setPrefSize(x * 0.1, y * 0.05);
-		
-		// configuring TextField
-		TextField inputText = new TextField();
-		inputText.setPrefSize(x * 0.32, y * 0.5);
-		
-		TextField valueText = new TextField();
-		valueText.setPrefSize(x * 0.1, y * 0.05);
 		
 		// configuring anchorpane layout
 		AnchorPane layout = new AnchorPane();
@@ -85,8 +95,12 @@ public class LogicVisView extends Application {
 		AnchorPane.setLeftAnchor(inputLabel, x * 0.08);
 		AnchorPane.setTopAnchor(inputLabel, y * 0.05);
 		
+		// outputText
+		AnchorPane.setLeftAnchor(outText, x * 0.58);
+		AnchorPane.setTopAnchor(outText, y * 0.1);
+		
 		// adding button to the pane
-		layout.getChildren().addAll(button, inputText, valueText, valueLabel, inputLabel);
+		layout.getChildren().addAll(button, inputText, valueText, valueLabel, inputLabel, outText);
 		
 		// set scene
 		Scene scene = new Scene(layout, x, y);

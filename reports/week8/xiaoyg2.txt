@@ -1,0 +1,16 @@
+Last Week's Goals
+------------------
+- Implement the Java function parsing.
+- Research on control flow generating code.
+
+Progress
+---------
+- Revised the proposal.
+- Designed the architecture of executor in our implementation step.
+- Start implementation of executor.
+
+
+This Week's Goals
+------------------
+- Finish the executor.
+- Combine executor with other people's code to be able to generate graph for recursive function.

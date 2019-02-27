@@ -2,8 +2,12 @@ public class testCode {
     public int recur() {
         int a = 0;
         a = a + 1;
-        for (int i = 0; i < 5; i++) {
+        if (a == 1) {
             a++;
+        } else if (a == 2) {
+            a--;
+        } else {
+            a = a + 3;
         }
         return a;
     }

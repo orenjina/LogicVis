@@ -70,11 +70,9 @@ public class ParserTests {
 
     @Test
     public void testEmptyTraverse() {
-	parser p = new parser(emptyMethod);
-	try {
-	    parser.Node root = p.traverse("emptyMethod");
-	    fail("NoSuchElementException should have been thrown");
-	} catch (NoSuchElementException e) { }
+	parser p = new parser(emptyMethod);	
+	parser.Node root = p.traverse("emptyMethod");
+	assertEquals(null, root);
     }
 
     @Test

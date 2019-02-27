@@ -63,8 +63,11 @@ public class parser {
     }
 
     // throws NoSuchElementException when method is empty
-    public Node traverse(String name) throws NoSuchElementException {
+    public Node traverse(String name) {
         MethodDeclaration method = getMethod(name);
+        if (method == null) {
+            return null;
+        }
         NodeList<Statement> stmts = method.getBody().get().getStatements();
         return listStmts(stmts, new HashSet<>());
     }

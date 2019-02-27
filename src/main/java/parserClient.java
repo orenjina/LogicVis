@@ -8,7 +8,14 @@ import java.util.*;
 public class parserClient {
 
     public static void main(String[] args) throws FileNotFoundException {
-        String testfile = "src/main/resources/testCode.java";
+        String testfile = "public int recur() {\n" +
+                "        int a = 5;\n" +
+                "        a = a + 1;\n" +
+                "        for (int i = 0; i < 5; i++) {\n" +
+                "            a++;\n" +
+                "        }\n" +
+                "        return a;\n" +
+                "    }";
         parser par = new parser(testfile);
 //        List<MethodDeclaration> methods = parser.getAllMethods();
 //        methods.forEach(n -> System.out.println("Method Collected: " + n.getName()));

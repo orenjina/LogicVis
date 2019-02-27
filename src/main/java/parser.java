@@ -9,6 +9,8 @@ import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 enum Type {
@@ -18,12 +20,19 @@ enum Type {
 // parser class that currently takes in a file containing a class, which should contain the user input class.
 public class parser {
     private CompilationUnit cu;
+    private final String fileName = "methodFile.java";
 
-    public parser(String filePath) {
-        File file = new File(filePath);
+    // takes in the user input method as one string
+    public parser(String method) {
         try {
+            PrintWriter out = new PrintWriter(fileName, "UTF-8");
+            out.println("public class methodFile {");
+            out.println(method);
+            out.print("}");
+            out.close();
+            File file = new File(fileName);
             cu = JavaParser.parse(file);
-        } catch (FileNotFoundException e) {
+        } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
     }

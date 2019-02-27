@@ -7,7 +7,7 @@ import java.util.*;
 
 public class parserClientTest {
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) {
         String testfile = "    public int recur() {\n" +
                 "        int a = 0;\n" +
                 "        a = a + 1;\n" +

@@ -8,6 +8,10 @@ See user manual here:
 For initial results, do any of the following:
 1. To see the results from our script, run the following command in the terminal at the root directory: ./scripts/initial_results.sh
 
-You should be able to see string representation print out of a tree in the terminal (See [testCode](/src/main/resources/testCode.java) for the original code of the tree). In addition, there will be a pop-up that represents the basic representation of the UI we plan to make. This UI is not functional yet.
+The program will first build and test, listing out its test results.
 
-2. Directly check the scripts in the scripts folder and run each command.
+Then, you should be able to see string representation print out of a tree in the terminal (See [testCode](/src/main/resources/testCode.java) for the original code of the tree). 
+
+In addition, there will be a pop-up that represents the basic representation of the UI we plan to make. This UI is not functional yet.
+
+2. Directly check the scripts in the scripts folder and run each command independently.

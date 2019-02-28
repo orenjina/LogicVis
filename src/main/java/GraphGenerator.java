@@ -3,7 +3,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javafx.embed.swing.*;
+//import javafx.embed.swing.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
@@ -23,8 +23,8 @@ public class GraphGenerator {
 	}
 	
 	public GraphGenerator(double weight, double height) {
-		cur_x = weight * 0.5;
-		cur_y = height * 0.1;
+		cur_x = 70;
+		cur_y = 30;
 		canvas = new ResizableCanvas();
 		canvas.setWidth(weight);
 		canvas.setHeight(height);
@@ -46,14 +46,16 @@ public class GraphGenerator {
 	
 	public WritableImage renderImage() {
 		WritableImage image = canvas.snapshot(null, null);
-		File file = new File("chart.png");
-		BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
-	    try {
-	        ImageIO.write(bImage, "png", file);
-	    } catch (IOException e) {
-	        // TODO: handle exception here
-	    		e.printStackTrace();
-	    }
+		
+		// save file
+//		File file = new File("chart.png");
+//		BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
+//	    try {
+//	        ImageIO.write(bImage, "png", file);
+//	    } catch (IOException e) {
+//	        // TODO: handle exception here
+//	    		e.printStackTrace();
+//	    }
 	    return image;
 	}
 	

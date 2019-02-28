@@ -1,0 +1,19 @@
+Last Week's Goals
+------------------
+ - [ALL] Revise the report and user manual
+- [EVAL] Create a specific procedure for usability tests to discern the effectiveness of our tool
+- [EVAL] Write an assessment on the effectiveness of our tool and relay important points to the implementation team
+- [ME] Update our paper prototype before testing
+- [ME] If needed, tweak the UI based on feedback
+
+Progress
+---------
+ - Went over usability testing again
+ - Read through code (to write tests)
+ - Began brainstorming tests
+
+This Week's Goals
+------------------
+ - Write tests for the implementation team
+ - [ALL] Ensure a working prototype of our system 
+ - [ALL] prepare the presentation

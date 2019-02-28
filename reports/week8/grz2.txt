@@ -1,0 +1,23 @@
+Last Week's Goals
+------------------
+ - Get a close to perfect project proposal finalized
+ - Finalize on a working direction for the project (rolled over) (May be done, but await confirmation from the staff)
+ - Make sure user manual and build tools are up to standards
+ - Do further user testing according to the feedback that will be given this week
+
+Progress
+---------
+ - Set up Travis CI and added a link of it in README
+ - Fixed problems of failing builds
+ - Received feedback on the proposal and addressed each (Process includes email correspondence about clarification)
+ - Basically reached the final form of the proposal: not much more editing on past week mistakes left over now
+ - Received feedback on user manual and addressed each
+ - Began looking at writing tests for the project
+
+This Week's Goals
+------------------
+ - Do further user testing according to the feedback that will be given this week (Rolled over: no working UI to do this yet)
+ - Successfully set up the testing for the project and write tests
+ - Set up the data analysis pipeline
+ - Put in sufficient materials to indicate how to generate data
+ - Draft the final report

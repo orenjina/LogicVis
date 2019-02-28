@@ -25,8 +25,8 @@ public class UIUtil {
 		gc.strokeLine(from_x, from_y, to_x, to_y);
 		double dir_x = to_x - from_x;
 		double dir_y = to_y - from_y;
-		gc.strokeLine(to_x - 0.06 * dir_x, to_y - 0.06 * dir_y, to_x, to_y);
-		gc.strokeLine(to_x - 0.04 * dir_x, to_y - 0.04 * dir_y, to_x, to_y);
+		gc.strokeLine(to_x - 0.15 * dir_x + 5, to_y - 0.15 * dir_y, to_x, to_y);
+		gc.strokeLine(to_x - 0.15 * dir_x - 5, to_y - 0.15 * dir_y, to_x, to_y);
 	}
 	
 	// Must point from left to right

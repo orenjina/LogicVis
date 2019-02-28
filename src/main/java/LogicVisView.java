@@ -8,6 +8,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -31,6 +34,7 @@ public class LogicVisView extends Application {
         // new code
 		// configure stage
 		stage.setTitle("LogicVis");
+		GraphGenerator gg = new GraphGenerator();
 		
 		// configure label
 		Label valueLabel = new Label();
@@ -48,9 +52,13 @@ public class LogicVisView extends Application {
 		TextField valueText = new TextField();
 		valueText.setPrefSize(x * 0.1, y * 0.05);
 		
-		TextField outText = new TextField();
-		outText.setPrefSize(x * 0.32, y * 0.5);
-		outText.setEditable(false);
+//		TextField outText = new TextField();
+//		outText.setPrefSize(x * 0.32, y * 0.5);
+//		outText.setEditable(false);
+		
+		// configuring image
+		ImageView iv = new ImageView();
+		iv.resize(x * 0.32, y * 0.5);
 		
 		// configuring button
 		Button button = new Button();
@@ -63,7 +71,10 @@ public class LogicVisView extends Application {
 				String input = inputText.getText();
 				String filename = valueText.getText();
 				if (input != null && filename != null) {
-					outText.setText(input + filename);
+					gg.draw(input);
+//					outText.setText(input + filename);
+					Image image = gg.renderImage();
+					iv.setImage(image);
 				}
 			}
 			
@@ -95,12 +106,16 @@ public class LogicVisView extends Application {
 		AnchorPane.setLeftAnchor(inputLabel, x * 0.08);
 		AnchorPane.setTopAnchor(inputLabel, y * 0.05);
 		
-		// outputText
-		AnchorPane.setLeftAnchor(outText, x * 0.58);
-		AnchorPane.setTopAnchor(outText, y * 0.1);
+//		// outputText
+//		AnchorPane.setLeftAnchor(outText, x * 0.58);
+//		AnchorPane.setTopAnchor(outText, y * 0.1);
+		
+		// image
+		AnchorPane.setLeftAnchor(iv, x * 0.58);
+		AnchorPane.setTopAnchor(iv, y * 0.1);
 		
 		// adding button to the pane
-		layout.getChildren().addAll(button, inputText, valueText, valueLabel, inputLabel, outText);
+		layout.getChildren().addAll(button, inputText, valueText, valueLabel, inputLabel/*, outText*/, iv);
 		
 		// set scene
 		Scene scene = new Scene(layout, x, y);

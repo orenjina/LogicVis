@@ -11,6 +11,8 @@ Progress this week:
 4. Implemented the tree data structure (in node form) (IMPLEM)
 5. Set up script to generate test results and initial results (EVAL)
 6. Implemented tree generator fo if-else, standard for loop, and return statements
+7. Implemented UI Util class. (IMPLEM)
+8. Being able to draw a graph and display it in the program. (IMPLEM)
 
 Goals for the next week:
 1. Finish the basic UI implementation

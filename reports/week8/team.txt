@@ -8,16 +8,17 @@ Progress this week:
 1. Developed and integrated tests with the maven system (EVAL)
 2. Created the frameworks for a UI (IMPLEM)
 3. Finalized the documents of the project (EVAL)
-4. Successfully handled non-recursive functions (IMPLEM)
+4. Implemented the tree data structure (in node form) (IMPLEM)
 5. Set up script to generate test results and initial results (EVAL)
-
+6. Implemented tree generator fo if-else, standard for loop, and return statements
 
 Goals for the next week:
 1. Finish the basic UI implementation
-2. Parse the recursive case of functions
+2. Implement more supported java functions (while loop and switch cases)
 3. User studies on effects and preferences of the UI to users
 4. Set up additional analysis pipelines as appropriate
 
 TA meeting agenda:
 1. Discuss the status on the proposal
 2. Discuss details of the next presentation
+3. Check if the technical progress is on schedule

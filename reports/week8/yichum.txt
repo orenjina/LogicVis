@@ -1,0 +1,12 @@
+Goals from last week:
+    - work on parsing special cases (if/else, loops, etc.)
+    - work on potentially implementing our own tree structure or using the API one to build graph
+
+Progress made this week:
+    - implemented our own tree class
+    - started working on building the tree from source code (finished if, for loop, and return)
+
+Plans for next week:
+    - work on more types of statement parsing
+    - work on taking a string rather than a file
+

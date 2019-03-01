@@ -1,0 +1,1 @@
+Hours you spent on the assignment: 40 hours in total

@@ -4,7 +4,7 @@ public class methodFile {
 		if (1 == 1) {
 			int one = 1;
 		} else {
-			int two = 3;
+			int two = 2;
 		}
 		int c = 2;
 		c = 3;

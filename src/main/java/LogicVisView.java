@@ -46,9 +46,9 @@ public class LogicVisView extends Application {
 		picLayout.getChildren().add(iv2);
 		
 		// configure label
-		Label valueLabel = new Label();
-		valueLabel.setPrefSize(x * 0.1, y * 0.05);
-		valueLabel.setText("Value Input:");
+//		Label valueLabel = new Label();
+//		valueLabel.setPrefSize(x * 0.1, y * 0.05);
+//		valueLabel.setText("Value Input:");
 		
 		Label inputLabel = new Label();
 		inputLabel.setPrefSize(x * 0.1, y * 0.05);
@@ -75,7 +75,7 @@ public class LogicVisView extends Application {
 		
 		// configuring button
 		Button button = new Button();
-		button.setText("Let's Do It!");
+		button.setText("Generate");
 		button.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
@@ -142,8 +142,8 @@ public class LogicVisView extends Application {
 		AnchorPane.setTopAnchor(valueText, y * 0.7);
 		
 		// valueLabel
-		AnchorPane.setLeftAnchor(valueLabel, x * 0.45);
-		AnchorPane.setTopAnchor(valueLabel, y * 0.65);
+//		AnchorPane.setLeftAnchor(valueLabel, x * 0.45);
+//		AnchorPane.setTopAnchor(valueLabel, y * 0.65);
 		
 		// inputLabel
 		AnchorPane.setLeftAnchor(inputLabel, x * 0.08);
@@ -158,7 +158,7 @@ public class LogicVisView extends Application {
 		AnchorPane.setTopAnchor(iv, y * 0.1);
 		
 		// adding button to the pane
-		layout.getChildren().addAll(button, inputText, valueText, valueLabel, inputLabel, outText);
+		layout.getChildren().addAll(button, inputText,/* valueText, valueLabel,*/ inputLabel, outText);
 		
 		// set scene
 		stage.setScene(scene);

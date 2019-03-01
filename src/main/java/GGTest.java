@@ -60,6 +60,10 @@ public class GGTest extends Application
 		} else {
 			int two = 2;
 		}
+		int c = 2;
+		c = 3;
+		c = 4;
+		c = 5;
 		return 5;
 	}
 }

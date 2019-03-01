@@ -41,7 +41,7 @@ public class UIUtil {
 	
 	public static void drawArrowRight(GraphicsContext gc, String statement, double from_x, double from_y, double scale) {
 		drawArrow(gc, from_x, from_y, from_x + scale, from_y, false);
-		gc.strokeText(statement, from_x + 5, from_y - 5, 100);
+		gc.strokeText(statement, from_x + 5, from_y - 2, 100);
 	}
 	
 	// Must point from left to right

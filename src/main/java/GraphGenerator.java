@@ -39,6 +39,7 @@ public class GraphGenerator {
 	}
 	
 	public void draw(parser.Node node, Boolean withArrow) {
+		expand();
 		System.out.println(node.getContent());
 		switch (node.getType()) {
 			case CONDITION:
@@ -80,17 +81,17 @@ public class GraphGenerator {
 		double temp_y = cur_y;
 		Map<parser.Node, String> children = node.getChildren();
 		for (parser.Node cur : children.keySet()) {
-			if (children.get(cur).equals("True")) {
+			if (children.get(cur).equals("False")) {
 				double start_x = cur_x + scale_x / 2;
 				double start_y = cur_y - scale_y / 2;
-				UIUtil.drawArrowRight(gc, "TRUE", start_x, start_y, scale_x / 2);
+				UIUtil.drawArrowRight(gc, "False", start_x, start_y, scale_x / 2);
 				cur_x = start_x + scale_x;
 				cur_y -= scale_y;
 				draw(cur, false);
 				cur_x = temp_x;
 				cur_y = temp_y;
 			} else {
-				UIUtil.drawArrowDown(gc, "FALSE", cur_x, cur_y, scale_y);
+				UIUtil.drawArrowDown(gc, "True", cur_x, cur_y, scale_y);
 				cur_y += scale_y;
 				draw(cur, false);
 				cur_x = temp_x;
@@ -149,13 +150,33 @@ public class GraphGenerator {
 	public void reset(double weight, double height) {
 		cur_x = 89;
 		cur_y = 30;
-		canvas = new ResizableCanvas();
+		canvas = new ResizableCanvas(); 
 		canvas.setWidth(weight);
 		canvas.setHeight(height);
+		this.weight = weight;
+		this.height = height;
 		this.gc = canvas.getGraphicsContext2D();
 		gc.setLineWidth(1);
 		UIUtil.drawStart(gc, cur_x - this.scale_x / 2, cur_y, this.scale_x, this.scale_y);
 		cur_y += this.scale_y; 
 	}
 	
+	private void expand() {
+
+		if (cur_y + 2 * scale_y > height) {
+			// expand vertically
+			System.out.println("expand");
+			canvas.setHeight(height * 2);
+			height *= 2;
+			System.out.println("height = " + height);
+		}
+		
+		if (cur_x + 2 * scale_x > weight) {
+			// expand horizontally
+			System.out.println("expand");
+			canvas.setWidth(weight * 2);
+			weight *= 2;
+			System.out.println("weight = " + weight);
+		}
+	}
 }

@@ -4,8 +4,12 @@ public class methodFile {
 		if (1 == 1) {
 			int one = 1;
 		} else {
-			int two = 2;
+			int two = 3;
 		}
-		return 6;
+		int c = 2;
+		c = 3;
+		c = 4;
+		c = 5;
+		return 5;
 	}
 }

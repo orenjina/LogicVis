@@ -40,7 +40,7 @@ public class GGTest extends Application
                 "-fx-border-color: blue;");
          
         // Add the Canvas to the Pane
-        gg.draw("");
+//        gg.draw("");
         canvas = gg.canvas;
         root.getChildren().add(canvas);
         // Create the Scene
@@ -51,5 +51,15 @@ public class GGTest extends Application
         stage.setTitle("Creation of a Canvas");
         // Display the Stage
         stage.show();  
+	}
+	
+	private int a() {
+		int b = 2;
+		if (1 == 1) {
+			int one = 1;
+		} else {
+			int two = 2;
+		}
+		return 5;
 	}
 }

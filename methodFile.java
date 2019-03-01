@@ -1,14 +1,3 @@
 public class methodFile {
-    public int recur() {
-        int a = 0;
-        a = a + 1;
-        if (a == 1) {
-            a++;
-        } else if (a == 2) {
-            a--;
-        } else {
-            a = a + 3;
-        }
-        return a;
-    }
+private int a() {int b = 2;if (1 == 1) {int one = 1;} else {int two = 2;}return 5;}
 }

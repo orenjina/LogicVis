@@ -21,12 +21,27 @@ public class UIUtil {
 		gc.strokeText(statement, pos_x + 0.25 * scale_x, pos_y + 0.75 * scale_y, 0.5 * scale_x);
 	}
 	
-	public static void drawArrow(GraphicsContext gc, double from_x, double from_y, double to_x, double to_y) {
+	public static void drawArrow(GraphicsContext gc, double from_x, double from_y, double to_x, double to_y, Boolean down) {
 		gc.strokeLine(from_x, from_y, to_x, to_y);
 		double dir_x = to_x - from_x;
 		double dir_y = to_y - from_y;
-		gc.strokeLine(to_x - 0.15 * dir_x + 5, to_y - 0.15 * dir_y, to_x, to_y);
-		gc.strokeLine(to_x - 0.15 * dir_x - 5, to_y - 0.15 * dir_y, to_x, to_y);
+		if (down) {
+			gc.strokeLine(to_x - 0.15 * dir_x + 5, to_y - 0.15 * dir_y, to_x, to_y);
+			gc.strokeLine(to_x - 0.15 * dir_x - 5, to_y - 0.15 * dir_y, to_x, to_y);
+		} else {
+			gc.strokeLine(to_x - 0.15 * dir_x, to_y - 0.15 * dir_y + 5, to_x, to_y);
+			gc.strokeLine(to_x - 0.15 * dir_x, to_y - 0.15 * dir_y - 5, to_x, to_y);
+		}
+	}
+	
+	public static void drawArrowDown(GraphicsContext gc, String statement, double from_x, double from_y, double scale) {
+		drawArrow(gc, from_x, from_y, from_x, from_y + scale, true);
+		gc.strokeText(statement, from_x + 5, from_y + scale / 2 + 10, 100);
+	}
+	
+	public static void drawArrowRight(GraphicsContext gc, String statement, double from_x, double from_y, double scale) {
+		drawArrow(gc, from_x, from_y, from_x + scale, from_y, false);
+		gc.strokeText(statement, from_x + 10, from_y - 5, 100);
 	}
 	
 	// Must point from left to right
@@ -39,16 +54,16 @@ public class UIUtil {
 	
 	public static void drawLineArrow(GraphicsContext gc, String statement, double from_x, double from_y, double to_x, double to_y, double mid_x, double mid_y) {
 		drawLine(gc, statement, Math.min(from_x, mid_x), Math.min(from_y, mid_y), Math.max(from_x, mid_x), Math.max(from_y, mid_y));
-		drawArrow(gc, mid_x, mid_y, to_x, to_y);
+		drawArrow(gc, mid_x, mid_y, to_x, to_y, true);
 	}
 	
 	public static void drawParameter(GraphicsContext gc, String statement, double pos_x, double pos_y, double scale_x, double scale_y) {
-		drawArrow(gc, pos_x - 0.2 * scale_x, pos_y + 0.5 * scale_y, pos_x, pos_y + 0.5 * scale_y);
+		drawArrow(gc, pos_x - 0.2 * scale_x, pos_y + 0.5 * scale_y, pos_x, pos_y + 0.5 * scale_y, false);
 		drawStatement(gc, statement, pos_x, pos_y, scale_x, scale_y);
 	}
 	
 	public static void drawReturn(GraphicsContext gc, String statement, double pos_x, double pos_y, double scale_x, double scale_y) {
-		drawArrow(gc, pos_x, pos_y + 0.5 * scale_y, pos_x  + 0.2 * scale_x, pos_y + 0.5 * scale_y);
+		drawArrow(gc, pos_x, pos_y + 0.5 * scale_y, pos_x  + 0.2 * scale_x, pos_y + 0.5 * scale_y, false);
 		drawStatement(gc, statement, pos_x, pos_y, scale_x, scale_y);
 	}
 	

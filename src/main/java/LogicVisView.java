@@ -70,10 +70,13 @@ public class LogicVisView extends Application {
 				String input = inputText.getText();
 				String filename = valueText.getText();
 				if (input != null && filename != null) {
-					gg.draw(input);
+					parser p = new parser(input);
+					parser.Node node = p.traverseFirst();
+					gg.draw(node, true);
 //					outText.setText(input + filename);
 					Image image = gg.renderImage();
 					iv.setImage(image);
+					gg.reset();
 				}
 			}
 			

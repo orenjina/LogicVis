@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -45,7 +46,7 @@ public class LogicVisView extends Application {
 		inputLabel.setText("Code Input:");
 		
 		// configuring TextField
-		TextField inputText = new TextField();
+		TextArea inputText = new TextArea();
 		inputText.setPrefSize(x * 0.32, y * 0.5);
 		
 		TextField valueText = new TextField();

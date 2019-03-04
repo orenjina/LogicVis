@@ -6,7 +6,12 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
@@ -30,6 +35,15 @@ public class LogicVisView extends Application {
         // new code
 		// configure stage
 		stage.setTitle("LogicVis");
+		GraphGenerator gg = new GraphGenerator();
+		AnchorPane layout = new AnchorPane();
+		AnchorPane picLayout = new AnchorPane();
+		ImageView iv2 = new ImageView();
+		iv2.setFitHeight(y);
+		iv2.setFitWidth(x);
+		AnchorPane.setLeftAnchor(iv2, 0.0);
+		AnchorPane.setTopAnchor(iv2, 0.0);
+		picLayout.getChildren().add(iv2);
 		
 		// configure label
 		Label valueLabel = new Label();
@@ -41,7 +55,7 @@ public class LogicVisView extends Application {
 		inputLabel.setText("Code Input:");
 		
 		// configuring TextField
-		TextField inputText = new TextField();
+		TextArea inputText = new TextArea();
 		inputText.setPrefSize(x * 0.32, y * 0.5);
 		
 		TextField valueText = new TextField();
@@ -50,6 +64,14 @@ public class LogicVisView extends Application {
 		TextField outText = new TextField();
 		outText.setPrefSize(x * 0.32, y * 0.5);
 		outText.setEditable(false);
+		outText.setText("Graph");
+		
+		// configuring image
+		ImageView iv = new ImageView();
+		iv.resize(x * 0.32, y * 0.5);
+		iv.setFitHeight(y * 0.5);
+		iv.setFitWidth(x * 0.32);
+		iv.setPreserveRatio(false);
 		
 		// configuring button
 		Button button = new Button();
@@ -62,16 +84,49 @@ public class LogicVisView extends Application {
 				String input = inputText.getText();
 				String filename = valueText.getText();
 				if (input != null && filename != null) {
-					outText.setText(input + filename);
+					if (layout.getChildren().contains(outText)) {
+						layout.getChildren().remove(outText);
+						layout.getChildren().add(iv);
+					}
+					parser p = new parser(input);
+					parser.Node node = p.traverseFirst();
+					gg.draw(node, true);
+					Image image = gg.renderImage();
+					iv.setImage(image);
+					iv2.setImage(image);
+					gg.reset();
 				}
 			}
 			
 		});
 		
+		// configure zoom scene
+		
+		Scene zoom = new Scene(picLayout, x, y);
+		Scene scene = new Scene(layout, x, y);
+		
+		iv.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+
+		     @Override
+		     public void handle(MouseEvent event) {
+		         System.out.println("Graph pressed ");
+		         stage.setScene(zoom);
+		     }
+		});
+		
+		iv2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+
+		     @Override
+		     public void handle(MouseEvent event) {
+		         System.out.println("Graph pressed again ");
+		         stage.setScene(scene);
+		     }
+		});
+		
+		
 		button.setPrefSize(x * 0.1, y * 0.05);
 		
 		// configuring anchorpane layout
-		AnchorPane layout = new AnchorPane();
 		
 		// set aspect ratio
 		// button
@@ -98,11 +153,14 @@ public class LogicVisView extends Application {
 		AnchorPane.setLeftAnchor(outText, x * 0.58);
 		AnchorPane.setTopAnchor(outText, y * 0.1);
 		
+		// image
+		AnchorPane.setLeftAnchor(iv, x * 0.58);
+		AnchorPane.setTopAnchor(iv, y * 0.1);
+		
 		// adding button to the pane
 		layout.getChildren().addAll(button, inputText, valueText, valueLabel, inputLabel, outText);
 		
 		// set scene
-		Scene scene = new Scene(layout, x, y);
 		stage.setScene(scene);
 		
 		// show scene

@@ -71,6 +71,20 @@ public class parser {
         NodeList<Statement> stmts = method.getBody().get().getStatements();
         return listStmts(stmts, new HashSet<>());
     }
+    
+    // returns null when method is empty
+    public Node traverseFirst() {
+    	List<MethodDeclaration> methods = getAllMethods();
+    	if (methods == null || methods.size() == 0) {
+    		return null;
+    	}
+        MethodDeclaration method = methods.get(0);
+        if (method == null) {
+            return null;
+        }
+        NodeList<Statement> stmts = method.getBody().get().getStatements();
+        return listStmts(stmts, new HashSet<>());
+    }
 
     // handles block statement
     private Node listStmts(NodeList<Statement> stmts, Set<Node> endNodes) {
@@ -201,7 +215,7 @@ public class parser {
         }
 
         public HashMap<Node, String> getChildren(){
-            return (HashMap) children.clone();
+            return (HashMap<Node, String>) children.clone();
         }
 
         public boolean addChild(Node child, String tag) {
@@ -223,5 +237,6 @@ public class parser {
 //            Node n = (Node) n2;
 //            return this.content.equals(n.content) && this.t==n.t && this.children.equals(n.children);
 //        }
+        
     }
 }

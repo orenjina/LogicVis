@@ -11,12 +11,17 @@ Progress this week:
 4. Implemented the tree data structure (in node form) (IMPLEM)
 5. Set up script to generate test results and initial results (EVAL)
 6. Implemented tree generator fo if-else, standard for loop, and return statements
+7. Implemented UI Util class. (IMPLEM)
+8. Being able to draw a graph and display it in the program. (IMPLEM)
+9. Working on the preposesor that get necessary information from the input. (IMPLEM)
+10. Implemented Executor that is able to execute the prepossessed input and get depth information. (IMPLEM)
 
 Goals for the next week:
 1. Finish the basic UI implementation
 2. Implement more supported java functions (while loop and switch cases)
 3. User studies on effects and preferences of the UI to users
 4. Set up additional analysis pipelines as appropriate
+5. Finish the executor
 
 TA meeting agenda:
 1. Discuss the status on the proposal

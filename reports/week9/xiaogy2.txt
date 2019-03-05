@@ -1,0 +1,17 @@
+Last Week's Goals
+------------------
+- Finish the executor.
+- Combine executor with other people's code to be able to generate graph for recursive function.
+
+Progress
+---------
+- Finish the implementation of preprocesor
+- Finish the implementation of executor
+- Prepared for the presentation 
+
+
+This Week's Goals
+------------------
+- Integrate the executor with the graph generator
+- Finish the implementation of the whole project
+- Update the project based on the feedback from evaluation team

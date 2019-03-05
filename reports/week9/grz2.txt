@@ -1,0 +1,24 @@
+Last Week's Goals
+------------------
+ - Do further user testing according to the feedback that will be given this week (Rolled over: no working UI to do this yet)
+ - Successfully set up the testing for the project and write tests
+ - Set up the data analysis pipeline
+ - Put in sufficient materials to indicate how to generate data
+ - Draft the final report
+
+Progress
+---------
+ - Performed peer review
+ - Set up testing for the project
+ - Found out that setting up data analysis pipeline is unnecessary in this case, so we will not be doing that (similar case about data generation)
+ - Figured out the structure of the final report
+ - Edited report to fix mistake according to the feedbacks from last week
+ - Altered user studies according to the limitations of our current implementation
+ - Conducted user studies and obtained results on 3 users
+
+This Week's Goals
+------------------
+ - Finish drafting the final report
+ - Perform more user studies based on a newer version of the product, which does not yet have a definite date of completion
+ - Help complete the UI and GUI aspects of the project if it is necessary
+ - Expand more on the final report based on the progress that will be made in the following week

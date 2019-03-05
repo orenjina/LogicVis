@@ -1,0 +1,22 @@
+Last Week's Goals
+------------------
+- [ALL] Revise the report and user manual
+- [EVAL] Create a specific procedure for usability tests to discern the effectiveness of our tool
+- [EVAL] Write an assessment on the effectiveness of our tool and relay important points to the implementation team
+- [ME] Update our paper prototype before testing
+- [ME] If needed, tweak the UI based on feedback
+
+Progress
+---------
+ - Wrote tests for 
+ - Wrote the script to usability testing
+ - Made another test case (based on current implementation progress)
+ - Performed 3 usability tests
+ - Difficulty: we really overestimated our participant's ability to grasp recursion
+ - Difficulty: being behind schedule really changed the format of the tests
+
+This Week's Goals
+------------------
+ - Code review for implementation
+ - Check in on the graphics of the UI 
+ - Do a second round of tests (with complete UI)

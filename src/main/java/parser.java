@@ -150,6 +150,8 @@ public class parser {
         if (ifst.hasElseBranch()) {
             Node falseBranch = oneStmtDispatch(ifst.getElseStmt().get(), endNodes);
             root.addChild(falseBranch, "False");
+        } else {
+            endNodes.add(root);
         }
         return root;
     }

@@ -1,0 +1,20 @@
+Last Week's Goals
+------------------
+ - Write tests for the implementation team
+ - [ALL] Ensure a working prototype of our system 
+ - [ALL] prepare the presentation
+
+Progress
+---------
+ - Wrote tests for 
+ - Wrote the script to usability testing
+ - Made another test case (based on current implementation progress)
+ - Performed 3 usability tests
+ - Difficulty: we really overestimated our participant's ability to grasp recursion
+ - Difficulty: being behind schedule really changed the format of the tests
+
+This Week's Goals
+------------------
+ - Code review for implementation
+ - Check in on the graphics of the UI 
+ - Do a second round of tests (with complete UI)

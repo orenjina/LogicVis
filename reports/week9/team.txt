@@ -10,13 +10,14 @@ Progress this week:
 2. Wrote analysis of testing and added to report (EVAL)
 3. Updated manual based on UI changes (EVAL)
 4. Changed report based on feedback (EVAL)
-5.
+5. Re-structured report by referencing other reports and TA suggestions (EVAL)
+6. Able to create a graph based on code (IMPLEM)
 
 Goals for the next week:
 1. Perform tests with complete UI and functionality (EVAL)
-2. 
+2. Add the test results to the final report when we get them (EVAL)
+3. Finish the prototype of the final product (IMPLEM)
 
 TA meeting agenda:
 1. Discuss the status on the report
 2. Discuss the project status and completion
-3. 

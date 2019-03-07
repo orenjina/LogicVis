@@ -12,6 +12,7 @@ Progress this week:
 4. Changed report based on feedback (EVAL)
 5. Re-structured report by referencing other reports and TA suggestions (EVAL)
 6. Able to create a graph based on code (IMPLEM)
+7. Executer implemented (IMPLEM)
 
 Goals for the next week:
 1. Perform tests with complete UI and functionality (EVAL)

@@ -1,0 +1,22 @@
+Goals last week:
+1. Finish the basic UI implementation
+2. Implement more supported java functions (while loop and switch cases)
+3. User studies on effects and preferences of the UI to users
+4. Set up additional analysis pipelines as appropriate
+5. Finish the executor
+
+Progress this week:
+1. Completed some user testing with incomplete product (EVAL)
+2. Wrote analysis of testing and added to report (EVAL)
+3. Updated manual based on UI changes (EVAL)
+4. Changed report based on feedback (EVAL)
+5.
+
+Goals for the next week:
+1. Perform tests with complete UI and functionality (EVAL)
+2. 
+
+TA meeting agenda:
+1. Discuss the status on the report
+2. Discuss the project status and completion
+3. 

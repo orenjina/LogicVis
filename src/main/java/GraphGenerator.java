@@ -1,6 +1,7 @@
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
@@ -19,12 +20,17 @@ public class GraphGenerator {
 	double scale_y = 36;
 	ResizableCanvas canvas;
 	GraphicsContext gc;
+	HashMap<parser.Node, Pos> map;
+	HashMap<parser.Node, HashMap<parser.Node, String>> graph;
+	double range_x;
+	double range_y;
+	parser.Node root;
 	
-	public GraphGenerator() {
-		this(960 * 0.32, 720 * 0.5);
+	public GraphGenerator(parser.Node node) {
+		this(960 * 0.32, 720 * 0.5, node);
 	}
 	
-	public GraphGenerator(double weight, double height) {
+	public GraphGenerator(double weight, double height, parser.Node node) {
 		cur_x = 89;
 		cur_y = 30;
 		canvas = new ResizableCanvas();
@@ -36,82 +42,93 @@ public class GraphGenerator {
 		gc.setLineWidth(1);
 		UIUtil.drawStart(gc, cur_x - this.scale_x / 2, cur_y, this.scale_x, this.scale_y);
 		cur_y += this.scale_y; 
+		map = new HashMap<parser.Node, Pos>();
+		graph = new HashMap<parser.Node, HashMap<parser.Node, String>>();
+		range_x = cur_x;
+		range_y = cur_y;
+		this.root = node;
+		construct();
 	}
 	
-	public void draw(parser.Node node, Boolean withArrow) {
-		expand();
+	private void draw(parser.Node node) {
 		System.out.println(node.getContent());
 		switch (node.getType()) {
 			case CONDITION:
-				drawConditionStatement(node, withArrow);
+				drawConditionStatement(node);
 				break;
 			case RETURN:
-				drawReturnStatement(node, withArrow);
+				drawReturnStatement(node);
 				break;
 			case NONE:
-				drawPlainStatement(node, withArrow);
+				drawPlainStatement(node);
 				break;
 			default:
 		}
 	}
 	
-	private void drawReturnStatement(parser.Node node, Boolean withArrow) {
+	private void drawReturnStatement(parser.Node node) {
 		// MVP
-		if (withArrow) {
-			UIUtil.drawArrow(gc, cur_x, cur_y, cur_x, cur_y + scale_y, true);
-			cur_y += scale_y;
-		}
-		UIUtil.drawRecurse(gc, node.getContent(), cur_x - this.scale_x / 2, cur_y, scale_x, scale_y);
-		cur_y += scale_y;
-		
-		Map<parser.Node, String> children = node.getChildren();
-		for (parser.Node cur : children.keySet()) {
-			draw(cur, true);
-		}
+		Pos cur = map.get(node);
+		UIUtil.drawRecurse(gc, node.getContent(), cur.x - this.scale_x / 2, cur.y, scale_x, scale_y);
 	}
 	
-	private void drawConditionStatement(parser.Node node, Boolean withArrow) {
-		if (withArrow) {
-			UIUtil.drawArrow(gc, cur_x, cur_y, cur_x, cur_y + scale_y, true);
-			cur_y += scale_y;
+	private void drawConditionStatement(parser.Node node) {
+		Pos cur = map.get(node);
+		UIUtil.drawConditional(gc, node.getContent(), cur.x - scale_x / 2, cur.y, scale_x, scale_y);
+	}
+	
+	private void drawPlainStatement(parser.Node node) {
+		// MVP
+		Pos cur = map.get(node);
+		UIUtil.drawStatement(gc, node.getContent(), cur.x - this.scale_x / 2, cur.y, scale_x, scale_y);
+	}
+	
+	private void drawStartToRoot() {
+		Pos cur = map.get(root);
+		UIUtil.drawArrow(gc, 89, 30 + scale_y, cur.x, cur.y, true);
+	}
+	
+	public void paint() {
+		drawStartToRoot();
+		
+		for(parser.Node node : map.keySet()) {
+			draw(node);
 		}
-		UIUtil.drawConditional(gc, node.getContent(), cur_x - scale_x / 2, cur_y, scale_x, scale_y);
-		cur_y += this.scale_y; 
-		double temp_x = cur_x;
-		double temp_y = cur_y;
-		Map<parser.Node, String> children = node.getChildren();
-		for (parser.Node cur : children.keySet()) {
-			if (children.get(cur).equals("False")) {
-				double start_x = cur_x + scale_x / 2;
-				double start_y = cur_y - scale_y / 2;
-				UIUtil.drawArrowRight(gc, "False", start_x, start_y, scale_x / 2);
-				cur_x = start_x + scale_x;
-				cur_y -= scale_y;
-				draw(cur, false);
-				cur_x = temp_x;
-				cur_y = temp_y;
-			} else {
-				UIUtil.drawArrowDown(gc, "True", cur_x, cur_y, scale_y);
-				cur_y += scale_y;
-				draw(cur, false);
-				cur_x = temp_x;
-				cur_y = temp_y;
+		
+		for(parser.Node node : graph.keySet()) {
+			for (parser.Node dst : graph.get(node).keySet()) {
+				paintConnect(node, dst, graph.get(node).get(dst));
 			}
 		}
 	}
 	
-	private void drawPlainStatement(parser.Node node, Boolean withArrow) {
-		// MVP
-		if (withArrow) {
-			UIUtil.drawArrow(gc, cur_x, cur_y, cur_x, cur_y + scale_y, true);
-			cur_y += scale_y;
-		}
-		UIUtil.drawStatement(gc, node.getContent(), cur_x - this.scale_x / 2, cur_y, scale_x, scale_y);
-		cur_y += scale_y;
+	private void paintConnect(parser.Node src, parser.Node dst, String statement) {
+		Pos x = map.get(src);
+		Pos y = map.get(dst);
 		
-		Map<parser.Node, String> children = node.getChildren();
-		for (parser.Node cur : children.keySet()) {
-			draw(cur, true);
+		if (x.x == y.x) {
+			if (x.y < y.y) {
+				UIUtil.drawArrowDown(gc, statement, x.x, x.y + scale_y, y.y - x.y - scale_y);
+			} else {
+				UIUtil.drawArrowUp(gc, statement, y.x - scale_x / 2, y.y + scale_y / 2, x.x - scale_x / 2, x.y + scale_y / 2);
+			}
+
+		} else if (x.y == y.y) {
+			if (x.x < y.x) {
+				System.out.println("right");
+				UIUtil.drawArrowRight(gc, statement, x.x + scale_x / 2, x.y + scale_y / 2, y.x - x.x - scale_x);
+			} else {
+				UIUtil.drawArrowLeft(gc, statement, x.x + scale_x / 2, x.y + scale_y / 2, x.x - y.x - scale_x);
+			}
+		} else {
+			if (x.x < y.x) {
+				System.out.println(1);
+				UIUtil.drawLineArrowVertical(gc, statement, x.x, x.y + scale_y, y.x + scale_x / 2 , y.y + scale_y / 2);
+			} else {
+				System.out.println(2);
+				UIUtil.drawLineArrowHorizontal(gc, statement, x.x, x.y + scale_y, y.x + scale_x / 2 , y.y + scale_y / 2);
+			}
+			
 		}
 	}
 	
@@ -143,24 +160,6 @@ public class GraphGenerator {
 		}
 	}
 	
-	public void reset() {
-		reset(960 * 0.32, 720 * 0.5);
-	}
-	
-	public void reset(double weight, double height) {
-		cur_x = 89;
-		cur_y = 30;
-		canvas = new ResizableCanvas(); 
-		canvas.setWidth(weight);
-		canvas.setHeight(height);
-		this.weight = weight;
-		this.height = height;
-		this.gc = canvas.getGraphicsContext2D();
-		gc.setLineWidth(1);
-		UIUtil.drawStart(gc, cur_x - this.scale_x / 2, cur_y, this.scale_x, this.scale_y);
-		cur_y += this.scale_y; 
-	}
-	
 	private void expand() {
 
 		if (cur_y + 2 * scale_y > height) {
@@ -179,4 +178,112 @@ public class GraphGenerator {
 			System.out.println("weight = " + weight);
 		}
 	}
+	
+	private void construct() {
+		cur_y += scale_y;
+		range_y = cur_y;
+		configure(root);
+	}
+	
+	private parser.Node getTrue(Map<parser.Node, String> children) {
+		for (parser.Node cur : children.keySet()) {
+			if (children.get(cur).equals("True")) {
+				return cur;
+			}
+		}
+		return null;
+	}
+	
+	private parser.Node getFalse(Map<parser.Node, String> children) {
+		for (parser.Node cur : children.keySet()) {
+			if (children.get(cur).equals("False")) {
+				return cur;
+			}
+		}
+		return null;
+	}
+	
+	public void configure(parser.Node node) {
+		System.out.println(node.getContent() + " " + cur_x);
+		expand();
+		switch (node.getType()) {
+			case CONDITION:
+				configureConditionStatement(node);
+				break;
+			case RETURN:
+				configureReturnStatement(node);
+				break;
+			case NONE:
+				configurePlainStatement(node);
+				break;
+			default:
+		}
+	}
+	
+	private void configureReturnStatement(parser.Node node) {
+		// TODO Auto-generated method stub
+		configurePlainStatement(node);
+	}
+
+	private void configurePlainStatement(parser.Node node) {
+		// TODO Auto-generated method stub
+		map.put(node, new Pos(cur_x, cur_y));
+		
+		Map<parser.Node, String> children = node.getChildren();
+		for (parser.Node cur : children.keySet()) {
+			cur_y += 2 * scale_y;
+			range_y = Math.max(cur_y, range_y);
+			connect(node, cur, "");
+			if (!map.containsKey(cur)) configure(cur);
+		}
+	}
+
+	private void configureConditionStatement(parser.Node node) {
+		// TODO Auto-generated method stub
+		map.put(node, new Pos(cur_x, cur_y));
+		
+		Map<parser.Node, String> children = node.getChildren();
+		parser.Node not = getFalse(children);
+		parser.Node yes = getTrue(children);
+		double temp_x = cur_x;
+		double temp_y = cur_y;
+		
+		// handle true first
+		cur_y += 2 * scale_y;
+		range_y = Math.max(cur_y, range_y);
+		connect(node, yes, "True");
+		if (!map.containsKey(yes)) configure(yes);
+		cur_x = temp_x;
+		cur_y = temp_y;
+		
+		// handle false later
+		cur_x = (3.0 / 2) * scale_x + range_x;
+		range_x = cur_x;
+		connect(node, not, "False");
+		if (not == null) System.out.println("null");
+		if (!map.containsKey(not)) configure(not);
+	}
+	
+	private void connect(parser.Node src, parser.Node dst, String statement) {
+		if (!graph.containsKey(src)) {
+			graph.put(src, new HashMap<parser.Node, String>());
+		}
+		graph.get(src).put(dst, statement);
+	}
+
+	private class Pos {
+		public double x;
+		public double y;
+		
+		public Pos() {
+			this.x = 0.0;
+			this.y = 0.0;
+		}
+		
+		public Pos(double x, double y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
+	
 }

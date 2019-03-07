@@ -1,4 +1,6 @@
 import java.util.Map;
+import java.util.Stack;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -35,7 +37,6 @@ public class LogicVisView extends Application {
         // new code
 		// configure stage
 		stage.setTitle("LogicVis");
-		GraphGenerator gg = new GraphGenerator();
 		AnchorPane layout = new AnchorPane();
 		AnchorPane picLayout = new AnchorPane();
 		ImageView iv2 = new ImageView();
@@ -44,6 +45,11 @@ public class LogicVisView extends Application {
 		AnchorPane.setLeftAnchor(iv2, 0.0);
 		AnchorPane.setTopAnchor(iv2, 0.0);
 		picLayout.getChildren().add(iv2);
+		Dispatcher D = new Dispatcher();
+		
+		Scene zoom = new Scene(picLayout, x, y);
+		Scene scene = new Scene(layout, x, y);
+		
 		
 		// configure label
 		Label valueLabel = new Label();
@@ -90,21 +96,45 @@ public class LogicVisView extends Application {
 					}
 					parser p = new parser(input);
 					parser.Node node = p.traverseFirst();
-					gg.draw(node, true);
+					GraphGenerator gg = new GraphGenerator(node);
+					gg.paint();
 					Image image = gg.renderImage();
 					iv.setImage(image);
 					iv2.setImage(image);
-					gg.reset();
+				}
+			}
+			
+		});
+		
+		Button next = new Button();
+		next.setText("NEXT");
+		
+		next.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+				String input = inputText.getText();
+				String filename = valueText.getText();
+				if (input != null && filename != null) {
+					parser p = new parser(input);
+					parser.Node node = p.traverseFirst();
+					GraphGenerator gg = new GraphGenerator(node);
+					gg.paint();
+					Image image = gg.renderImage();
+					ImageView temp = D.getNextImageView();
+					
+					temp.setImage(image);
+					stage.setWidth(D.cur_x + D.scale_x + 30);
+					layout.getChildren().add(temp);
 				}
 			}
 			
 		});
 		
 		// configure zoom scene
-		
-		Scene zoom = new Scene(picLayout, x, y);
-		Scene scene = new Scene(layout, x, y);
-		
+
 		iv.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 
 		     @Override
@@ -133,6 +163,9 @@ public class LogicVisView extends Application {
 		AnchorPane.setLeftAnchor(button, x * 0.45);
 		AnchorPane.setTopAnchor(button, y * 0.8);
 		
+		AnchorPane.setLeftAnchor(next, x * 0.45);
+		AnchorPane.setTopAnchor(next, y * 0.9);
+		
 		// inputText
 		AnchorPane.setLeftAnchor(inputText, x * 0.08);
 		AnchorPane.setTopAnchor(inputText, y * 0.1);
@@ -158,7 +191,7 @@ public class LogicVisView extends Application {
 		AnchorPane.setTopAnchor(iv, y * 0.1);
 		
 		// adding button to the pane
-		layout.getChildren().addAll(button, inputText, valueText, valueLabel, inputLabel, outText);
+		layout.getChildren().addAll(button, inputText, valueText, valueLabel, inputLabel, outText, next);
 		
 		// set scene
 		stage.setScene(scene);
@@ -170,5 +203,40 @@ public class LogicVisView extends Application {
     public static void main(String[] args) {
         launch();
     }
-
+    
+    private class Dispatcher {
+    	public double cur_x;
+    	public double cur_y;
+    	public double scale_x = x * 0.32;
+    	public Stack<ImageView> s;
+    	
+    	public Dispatcher() {
+    		cur_x = x * 0.58;
+    		cur_y = y * 0.1;
+    		s = new Stack<ImageView>();
+    	}
+    	
+    	public ImageView getNextImageView() {
+    		ImageView iv = new ImageView();
+    		iv.setFitHeight(y * 0.5);
+    		iv.setFitWidth(x * 0.32);
+    		cur_x += scale_x + 30;
+    		AnchorPane.setLeftAnchor(iv, cur_x);
+    		AnchorPane.setTopAnchor(iv, cur_y);
+    		s.push(iv);
+    		return iv;
+    	}
+    	
+    	public ImageView peek() {
+    		return s.peek();
+    	}
+    	
+    	public ImageView pop() {
+    		return s.pop();
+    	}
+    	
+    	public boolean isEmpty() {
+    		return s.isEmpty();
+    	}
+    }
 }

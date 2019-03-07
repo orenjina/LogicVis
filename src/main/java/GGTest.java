@@ -21,8 +21,20 @@ public class GGTest extends Application
         canvas.setWidth(400);
         // Set the height of the Canvas
         canvas.setHeight(200);
+        
+        String testfile = "private int a() {\n" + 
+        		"	for (int i = 0; i < 3; i ++) {\n" + 
+        		"		int b = 2;\n" + 
+        		"	}\n" + 
+        		"	return 2;\n" + 
+        		"}";
+        parser par = new parser(testfile);
+//        List<MethodDeclaration> methods = parser.getAllMethods();
+//        methods.forEach(n -> System.out.println("Method Collected: " + n.getName()));
+//        MethodDeclaration m = par.getMethod("recur");
+        parser.Node r = par.traverse("a");
          
-        GraphGenerator gg = new GraphGenerator(400, 200);
+        GraphGenerator gg = new GraphGenerator(400, 200, r);
         // Get the graphics context of the canvas
         GraphicsContext gc = canvas.getGraphicsContext2D();
          
@@ -57,6 +69,11 @@ public class GGTest extends Application
 		int b = 2;
 		if (1 == 1) {
 			int one = 1;
+			if (2==2) {
+				return 1;
+			} else {
+				return 5;
+			}
 		} else {
 			int two = 2;
 		}
@@ -64,6 +81,14 @@ public class GGTest extends Application
 		c = 3;
 		c = 4;
 		c = 5;
+		return 5;
+	}
+	
+	private int forloop() {
+		for (int i = 0; i < 3; i++) {
+			int a = 0;
+		}
+		int b = 5;
 		return 5;
 	}
 }

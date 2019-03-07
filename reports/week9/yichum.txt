@@ -1,0 +1,14 @@
+Goals from last week:
+    - work on more types of statement parsing
+    - work on taking a string rather than a file
+
+Progress made this week:
+    - implemented while loop handler
+    - front end reported that it needs a parseFirst function since we don't know the function name
+    so worked on implementing that
+    - added more comments
+    - completed the presentation
+    - submitted pull requests for code review
+
+Plans for next week:
+    - work on finding out how to parse out the recursion method call and make an enum type for it

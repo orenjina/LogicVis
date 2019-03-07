@@ -1,0 +1,11 @@
+Section 1: Previous Week's Plan:
+- Work on generating graph from data structure parsed from code.
+
+
+Section 2: This Week's Progress
+- Be able to generate basic graph
+- then reimplemented the whole thing
+
+Section 3: Next Week's Plan
+- work on recursion
+- work on displaying parameter

@@ -1,12 +1,18 @@
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Stack;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -18,6 +24,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 public class LogicVisView extends Application {
 	
@@ -87,21 +94,28 @@ public class LogicVisView extends Application {
 			@Override
 			public void handle(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				String input = inputText.getText();
-				String filename = valueText.getText();
-				if (input != null && filename != null) {
-					if (layout.getChildren().contains(outText)) {
-						layout.getChildren().remove(outText);
-						layout.getChildren().add(iv);
-					}
-					parser p = new parser(input);
-					parser.Node node = p.traverseFirst();
-					GraphGenerator gg = new GraphGenerator(node);
-					gg.paint();
-					Image image = gg.renderImage();
-					iv.setImage(image);
-					iv2.setImage(image);
-				}
+//				String input = inputText.getText();
+//				String filename = valueText.getText();
+//				if (input != null && filename != null) {
+//					if (layout.getChildren().contains(outText)) {
+//						layout.getChildren().remove(outText);
+//						layout.getChildren().add(iv);
+//					}
+//					parser p = new parser(input);
+//					parser.Node node = p.traverseFirst();
+//					GraphGenerator gg = new GraphGenerator(node);
+//					gg.paint();
+//					Image image = gg.renderImage();
+//					iv.setImage(image);
+//					iv2.setImage(image);
+//				}
+				
+				Dialog<ArrayList<String>> dialog = configureDialog();
+				Optional<ArrayList<String>> result = dialog.showAndWait();
+				result.ifPresent(value -> {
+					System.out.println(result.toString());
+				});
+				
 			}
 			
 		});
@@ -238,5 +252,50 @@ public class LogicVisView extends Application {
     	public boolean isEmpty() {
     		return s.isEmpty();
     	}
+    }
+    
+    private Dialog<ArrayList<String>> configureDialog() {
+    	Dialog<ArrayList<String>> dialog = new Dialog<>();
+    	
+    	// configuration
+    	
+    	dialog.setTitle("Parameter Input");
+    	dialog.setHeaderText("Please type in your parameter values");
+    	
+    	// set the button types
+    	ButtonType enterButtonType = new ButtonType("Enter", ButtonData.OK_DONE);
+    	dialog.getDialogPane().getButtonTypes().addAll(enterButtonType, ButtonType.CANCEL);
+    	
+    	// Create Fields
+    	GridPane grid = new GridPane();
+    	grid.setHgap(10);
+    	grid.setVgap(10);
+    	grid.setPadding(new Insets(20, 150, 10, 10));
+    	
+    	TextField t1 = new TextField();
+    	t1.setPromptText("t1");
+    	TextField t2 = new TextField();
+    	t2.setPromptText("t2");
+    	
+    	grid.add(new Label("t1"), 0, 0);
+    	grid.add(new Label("t2"), 0, 1);
+    	grid.add(t1, 1, 0);
+    	grid.add(t2, 1, 1);
+    	
+    	dialog.getDialogPane().setContent(grid);
+    	
+    	Platform.runLater(() -> t1.requestFocus());
+    	
+    	dialog.setResultConverter(dialogButton -> {
+    		if (dialogButton == enterButtonType) {
+    			ArrayList<String> result = new ArrayList<String>();
+    			result.add(t1.getText());
+    			result.add(t2.getText());
+    			return result;
+    		}
+    		return null;
+    	});
+    	
+    	return dialog;
     }
 }

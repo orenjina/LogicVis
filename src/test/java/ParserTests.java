@@ -120,7 +120,7 @@ public class ParserTests {
 	if (!oneTrue) {
 	    fail("No true tag found");
 	}
-	assertEquals(3, size);
+	assertEquals(4, size);
 	assert lines.contains("x < 0");
 	assert lines.contains("return 0;");
 	assert lines.contains("return x + recursiveMethod(x - 1);");

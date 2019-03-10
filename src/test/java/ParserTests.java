@@ -122,8 +122,8 @@ public class ParserTests {
 	}
 	assertEquals(4, size);
 	assert lines.contains("x < 0");
-	assert lines.contains("return 0");
-	assert lines.contains("return x + recursiveMethod(x - 1)");
+	assert lines.contains("0");
+	assert lines.contains("x + recursiveMethod(x - 1)");
     }
 
     @Test

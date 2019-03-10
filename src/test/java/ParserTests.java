@@ -81,7 +81,7 @@ public class ParserTests {
 	parser.Node root = p.traverse("parameterMethod");
 	HashMap<parser.Node, String> map = root.getChildren();
 	assertEquals(0, map.size());
-	assertEquals("x++;", root.getContent());
+	assertEquals("x++", root.getContent());
     }
 
     @Test
@@ -122,8 +122,8 @@ public class ParserTests {
 	}
 	assertEquals(4, size);
 	assert lines.contains("x < 0");
-	assert lines.contains("return 0;");
-	assert lines.contains("return x + recursiveMethod(x - 1);");
+	assert lines.contains("return 0");
+	assert lines.contains("return x + recursiveMethod(x - 1)");
     }
 
     @Test
@@ -153,11 +153,11 @@ public class ParserTests {
 	    }
 	} while (!queue.isEmpty());
         assertEquals(5, lines.size());
-	assert lines.contains("int x;");
+	assert lines.contains("int x");
 	assert lines.contains("int i = 0");
 	assert lines.contains("i < 5");
 	assert lines.contains("i++");
-	assert lines.contains("x++;");
+	assert lines.contains("x++");
     }
 }
 

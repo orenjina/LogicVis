@@ -22,7 +22,6 @@ import java.util.stream.Stream;
 }
  *
  *
- *
  * Modified code:
 
 int fibonacci(int depTH, int n) {
@@ -60,8 +59,7 @@ public class Preprocessor {
 	public Preprocessor(String code) {
 		this.code = code;
 	}
-	
-	
+		
 	// @returns how many parameters do we have in the function code
 	public int getParamNumber() {
 		if (parameterTypes == null || parameterNames == null || parameterTypes != parameterNames) {
@@ -75,6 +73,8 @@ public class Preprocessor {
 	// will store the parameters' types and names of and inject some necessary lines for executor
 	// to process. Return true if preprocessing succeeds, otherwise false.
 	public boolean preprocess() {
+		// Look for the first parentheses, so that we can get the parameter information from this
+		// function
 		int left = this.code.indexOf('(');
 		int right = this.code.indexOf(')');
 		// If there is no "()" in the code, return false

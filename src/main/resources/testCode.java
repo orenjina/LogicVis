@@ -4,7 +4,7 @@ public class testCode {
         if (a == 1) {
             a++;
         } else if (a == 2) {
-            return recur(a--);
+            return recur(a--) + recur(1);
         } else {
             recur(a);
         }

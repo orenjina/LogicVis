@@ -1,0 +1,10 @@
+Section 1: Previous Week's Plan:
+- work on recursion
+- work on displaying parameter
+
+Section 2: This Week's Progress
+- Be able to get parameters from a pop up dialog window
+- Be able to add more image views to the panel
+
+Section 3: Next Week's Plan
+- Integrate with executer and finish up

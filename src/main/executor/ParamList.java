@@ -17,84 +17,21 @@ public class ParamList{
 	}
 	
 	/*
-	 * @param: name, the name of parameter; value the value of the string
-	 * Add a String value into params in a format "String n <-- value"
+	 * @param: name, the name of parameter; value the value of an Object
+	 * Add a toString value into params in a format "String n <-- value"
 	 */
-	public void addParam(String name, String value) {
-		params.add("String " + name + " <-- " + value);
+	public void addParam(String name, Object value) {
+		params.add(value.getClass().toString() + " " + name + " <-- " + value.toString());
 	}
 	
 	/*
-	 * @param: name, the name of parameter; value the value of the integer
-	 * Add a Integer value into params in a format "int n <-- value"
-	 */	
-	public void addParam(String name, int value) {
-		params.add("int " + name + " <-- " + value);
-	} 
-	
-	/*
-	 * @param: name, the name of parameter; value the value of the double
-	 * Add a double value into params in a format "double n <-- value"
-	 */
-	public void addParam(String name, double value) {
-		params.add("double " + name + " <-- " + value);
-	}
-	
-	/*
-	 * @param: name, the name of parameter; value the value of the char
-	 * Add a char value into params in a format "char n <-- value"
-	 */
-	public void addParams(String name, char value) {
-		params.add("char " + name + " <-- " + value);
-	}
-	
-	/*
-	 * @param: name, the name of the parameter; value, the value of the float
-	 * Add a float value into params in a format "float n <-- value"
-	 */
-	public void addParams(String name, float value) {
-		params.add("float " + name + " <-- " + value);
-	}
-	
-	/*
-	 *  @param: value, the value of the returned String
+	 *  @param: value, the value of the returned Object
 	 *  Set the returned value
 	 */
-	public void addReturn(String value) {
-		this.returnValue = value;
+	public void addReturn(Object value) {
+		this.returnValue = value.toString();
 	}
 	
-	/*
-	 *  @param: value, the value of the returned int
-	 *  Set the returned value as a String
-	 */
-	public void addReturn(int value) {
-		this.returnValue = Integer.toString(value);
-	}
-
-	/*
-	 *  @param: value, the value of the returned double
-	 *  Set the returned value as a String
-	 */
-	public void addReturn(double value) {
-		this.returnValue = Double.toString(value);
-	}
-	
-	/*
-	 *  @param: value, the value of the returned float
-	 *  Set the returned value as a String
-	 */
-	public void addReturn(float value) {
-		this.returnValue = Float.toString(value);
-	}
-	
-	/*
-	 *  @param: value, the value of the returned char
-	 *  Set the returned value as a String
-	 */
-	public void addReturn(char value) {
-		this.returnValue = Character.toString(value);
-	}
 	
 	// Return if the node has next node
 	public boolean hasNext() {

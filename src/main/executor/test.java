@@ -9,11 +9,11 @@ public class test {
 	public final static String HCF = "hcf.bsh";
 	
 	public static void main(String[] args) {
-		testPreprocessorFib();
+		//testPreprocessorFib();
 		// testExecutorFib();
 		// testPreprocessorHCF();
 		// testExecutorHCF();
-		// testActionFib();
+		 testActionFib();
 		//testActionHCF();
 	}
 	

@@ -3,11 +3,22 @@ import java.util.ArrayList;
 // A graph node that stores the information for a control flow graph. GraphNode is
 // mainly used in the currentState field in ActionGenerator.
 public class GraphNode {
-	// Replace the current function call with a returned value 
+	// If recursive functions in the current call have been returned,
+	// functionCallReplace stores the returned value in a String form.
+	// The index of arrayList indicates which function call needs to be
+	// replaced by the corresponding value when we show the graph. e.g. if we
+	// have a function recur(n) {return recur(n-1) + recur(n-2)} and functionCallReplace[0] = "boo";
+	// This means, in the current graph, recur(n-1) has been fully explored and get a return
+	// value "boo" but recur(n-2) has not been fully explored. Therefore, when showing the graph,
+	// We replace recur(n-1) with "boo" in the graph
 	public ArrayList<String> functionCallReplace;
+	
 	// A ParamList node that stores the parameters and return value of one function call
 	private ParamList node;
-	// Connected to which function call in the previous call.
+	
+	// Indicates which recursive function call from previous function called this current function.
+	// In the example recur(n) {return recur(n-1) + recur(n-2)}; connectedArrow == 0 means previous 
+	// function call recur(n-1) called this depth, 1 means previous recur(n-2) called this depth
 	public int connectedArrow;
 	// Stores the number of function call has been processed
 	public int currentChildren;

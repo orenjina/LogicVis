@@ -14,7 +14,7 @@ public class Executor {
 	// Set a pointer so that we can iterate through the paramlist
 	public final static String BUILDPOINTER = "ParamList begin = root;";
 	
-	// The paramlist that stores the parameter values and depth in a String format "int i <-- 5"
+	// The paramlist that stores the parameter values and depth in a String format "int i <-- i's value"
 	// for each recursive call.
 	public ParamList list = null;
 	// The starting parameter values, set by users.
@@ -44,8 +44,11 @@ public class Executor {
 				functionCall.append(", " + args[i]);
 			}
 			functionCall.append(")");
+			// Initialize the ParamList that can store parameters of each depth
 			interpreter.eval(BUILDLIST);
+			// Initialize a pointer that points to the front of the list
 			interpreter.eval(BUILDPOINTER);
+			// Execute the modified code and it will update the paramlist 
 			interpreter.eval(p.modifiedCode);
 			interpreter.eval(functionCall.toString());
 			root = (ParamList) interpreter.get("begin");

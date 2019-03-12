@@ -5,7 +5,6 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.stmt.*;
-import com.github.javaparser.ast.type.VoidType;
 import com.github.javaparser.ast.visitor.VoidVisitor;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
 
@@ -86,11 +85,10 @@ public class parser {
         return listStmts(stmts, new HashSet<>());
     }
 
-    public Node getOrderOfRecurNode(int i) {
-        if (containRecurNode == null || i >= containRecurNode.size()) {
-            return null;
-        }
-        return containRecurNode.get(i);
+    // call after traverse
+    public List<Node> getRecurNodes() {
+        List<Node> newList = new ArrayList<>(containRecurNode);
+        return newList;
     }
 
     public String getFirstFunctionName() {

@@ -30,9 +30,9 @@ public class parserClientTest {
 ////        printTree(root);
 //        par.getMethodCall("recur");
         par.traverseFirst();
-        for (int i = 0; i < 5; i++) {
-            System.out.println(par.getOrderOfRecurNode(i).getContent());
-        }
+//        for (int i = 0; i < 5; i++) {
+//            System.out.println(par.getOrderOfRecurNode(i).getContent());
+//        }
     }
 
 //    private static void printTree(parser.Node root) {

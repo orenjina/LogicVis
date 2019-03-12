@@ -21,20 +21,28 @@ import java.util.stream.Stream;
 	return fibonacci(n - 1) + fibonacci(n - 2);
 }
  *
+ *
  * Modified code:
 
- int fibonacci(int depTH, int n) {
+int fibonacci(int depTH, int n) {
  root.next = new ParamList(depTH); 
  root = root.next; 
  root.addParam("n", n); 
+ParamList curDEPTH = root;
 
 	if(n == 0) {
-		return 0;
+		int returnVALUE = 0;
+curDEPTH.addReturn(returnVALUE);
+return returnVALUE;
 	}
 	if(n == 1) {
-		return 1;
+		int returnVALUE = 1;
+curDEPTH.addReturn(returnVALUE);
+return returnVALUE;
 	}
-	return fibonacci(depTH + 1, n - 1) + fibonacci(depTH + 1, n - 2);
+	int returnVALUE = fibonacci(depTH + 1, n - 1) + fibonacci(depTH + 1, n - 2);
+curDEPTH.addReturn(returnVALUE);
+return returnVALUE;
 }
 
  */
@@ -42,6 +50,7 @@ public class Preprocessor {
 	public String code = null;		// The original code
 	public String modifiedCode = null;		// The modified code after processing
 	public String functionName = null;		// The name of this function call
+	public String returnType = null;
 	public String[] parameterTypes;		// The types of all parameters
 	public String[] parameterNames;		// The names of all parameters
 	
@@ -50,11 +59,7 @@ public class Preprocessor {
 	public Preprocessor(String code) {
 		this.code = code;
 	}
-	
-	public Preprocessor() {
 		
-	}
-	
 	// @returns how many parameters do we have in the function code
 	public int getParamNumber() {
 		if (parameterTypes == null || parameterNames == null || parameterTypes != parameterNames) {
@@ -68,15 +73,21 @@ public class Preprocessor {
 	// will store the parameters' types and names of and inject some necessary lines for executor
 	// to process. Return true if preprocessing succeeds, otherwise false.
 	public boolean preprocess() {
+		// Look for the first parentheses, so that we can get the parameter information from this
+		// function
 		int left = this.code.indexOf('(');
 		int right = this.code.indexOf(')');
 		// If there is no "()" in the code, return false
 		if (left <= 0 || right <= 0) {
 			return false;
 		}
-		String[] title = code.substring(0, left).split(" ");
+		String[] title = code.substring(0, left).trim().split(" ");
 		// Get and store the function name
+		if (title.length < 2) {
+			return false;
+		}
 		this.functionName = title[title.length - 1];
+		this.returnType = title[title.length - 2];
 		String param = code.substring(left + 1, right);
 		String[] params = param.split(",");
 		int num = params.length;
@@ -98,6 +109,7 @@ public class Preprocessor {
 		StringBuilder sb = new StringBuilder();
 		// get the Code with a parameter that stores depth.
 		String codeWithDepth = addDepthParam(code, functionName);
+		codeWithDepth = modifyReturn(codeWithDepth, returnType);
 		int start = codeWithDepth.indexOf('{');
 		// If the code does not contain '{', return false
 		if (start == -1) {
@@ -108,6 +120,7 @@ public class Preprocessor {
 		for (int i = 0; i < parameterNames.length; i++) {
 			injected += " root.addParam(\"" + this.parameterNames[i] +"\", " + this.parameterNames[i] +"); \n";
 		}
+		injected += "ParamList curDEPTH = root;";
 		sb.append(codeWithDepth.substring(0, start + 1));
 		sb.append(injected);
 		sb.append(codeWithDepth.substring(start + 1));
@@ -148,6 +161,31 @@ public class Preprocessor {
 			i = j + 1;
 		}
 		sb.append(code.substring(i));
+		return sb.toString();
+	}
+	
+	/*
+	 * A helper function that takes a String of Java code and the type of the return value,
+	 * inject a few lines before all the "return" so that we can store the return value into the
+	 * ParamList node.
+	 */
+	private String modifyReturn(String code, String type) {
+		StringBuilder sb = new StringBuilder();
+		int i = code.indexOf("return");
+		if (i == -1) {
+			return code;
+		}
+		int semi = -1;
+		while (code.indexOf("return", semi) != -1) {
+			i = code.indexOf("return", semi);
+			sb.append(code.substring(semi + 1, i));
+			semi = code.indexOf(";", i);
+			String returnExpr = code.substring(i + "return".length(), semi).trim();
+			String injectedCode = type + " " + "returnVALUE = " + returnExpr + ";\n";
+			injectedCode += "curDEPTH.addReturn(returnVALUE);\nreturn returnVALUE;"; 
+			sb.append(injectedCode);
+		}
+		sb.append(code.substring(semi + 1, code.length() - 1));
 		return sb.toString();
 	}
 	

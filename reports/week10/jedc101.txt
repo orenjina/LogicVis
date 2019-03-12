@@ -1,0 +1,15 @@
+Last Week's Goals
+------------------
+ - Code review for implementation
+ - Check in on the graphics of the UI 
+ - Do a second round of tests (with complete UI)
+ 
+Progress
+---------
+ - Wrote improved version of UI (waiting for complete implementation)
+ - Set up user testing for tomorrow
+
+This Week's Goals
+-----------------
+ - Complete the UI
+ - Complete the user testing and fill it in the report

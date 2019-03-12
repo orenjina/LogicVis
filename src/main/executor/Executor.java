@@ -2,6 +2,7 @@
 import bsh.Interpreter;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /*
  * This is the Executor takes a piece of recursive java function code and test if the code is executable.
@@ -13,20 +14,18 @@ public class Executor {
 	// Set a pointer so that we can iterate through the paramlist
 	public final static String BUILDPOINTER = "ParamList begin = root;";
 	
-	// The paramlist that stores the parameter values and depth in a String format "int i <-- 5"
+	// The paramlist that stores the parameter values and depth in a String format "int i <-- i's value"
 	// for each recursive call.
 	public ParamList list = null;
 	// The starting parameter values, set by users.
 	String args[];
 	
+	public LinkedList<GraphNode> currentState;
+	
 	// Pass a Java code function as a String and the initial parameter values set by user.
-	public Executor(String code, String args[]) {
+	public Executor(Preprocessor p, String args[]) {
 		this.args = args;
-		// Preprocess the code by injecting some lines into the original code
-		Preprocessor p = new Preprocessor(code);
-		if (p.preprocess()) {
-			list = getList(p);
-		}
+		this.list = getList(p);
 	}
 	
 	// A helper function that execute the modified code from Preprocessor, if execution failed, 
@@ -45,8 +44,11 @@ public class Executor {
 				functionCall.append(", " + args[i]);
 			}
 			functionCall.append(")");
+			// Initialize the ParamList that can store parameters of each depth
 			interpreter.eval(BUILDLIST);
+			// Initialize a pointer that points to the front of the list
 			interpreter.eval(BUILDPOINTER);
+			// Execute the modified code and it will update the paramlist 
 			interpreter.eval(p.modifiedCode);
 			interpreter.eval(functionCall.toString());
 			root = (ParamList) interpreter.get("begin");
@@ -63,13 +65,16 @@ public class Executor {
 		ParamList temp = list;
 		if (temp != null) {
 			System.out.println("Depth: " + temp.getDepth());
+			System.out.println("Return Value: " + temp.returnValue);
 			printParams(temp);
+			while (temp.hasNext()) {
+				temp = temp.next;
+				System.out.println("Depth: " + temp.getDepth());
+				System.out.println("Return Value: " + temp.returnValue);
+				printParams(temp);
+			}
 		}
-		while (temp.hasNext()) {
-			temp = temp.next;
-			System.out.println("Depth: " + temp.getDepth());
-			printParams(temp);
-		}
+
 	}
 	
 	// A helper function that prints out the parameters
@@ -80,5 +85,6 @@ public class Executor {
 			System.out.println(i);
 		}
 	}
+	
 
 }

@@ -1,0 +1,12 @@
+Plans from last week:
+    - work on finding out how to parse out the recursion method call and make an enum type for it
+
+Progress made this week:
+    - made changes to my code according to Andrew's need
+    - sat down in meetings with the implementation group to talk about one specific technical
+    difficulties regarding to the recursion recognition and tracking
+    - resolved the difficulty on my end by digging into the api more and try out different ways of
+    implementation
+
+Plans for next week:
+    - write java doc tomorrow and polish the project

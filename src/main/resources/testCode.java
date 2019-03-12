@@ -1,14 +1,25 @@
 public class testCode {
-    public int recur() {
-        int a = 0;
+    public int recur(int a) {
         a = a + 1;
         if (a == 1) {
             a++;
         } else if (a == 2) {
-            a--;
+            return recur(a--) + recur(1);
         } else {
-            a = a + 3;
+            recur(a);
         }
+        if (this.recur(a+1) == 1)
+            return 0;
         return a;
+    }
+}
+
+public class testCode {
+    public int recur(int a) {
+        if (a % 3 == 1) {
+            return 0;
+        } else {
+            return recur(a--);
+        }
     }
 }

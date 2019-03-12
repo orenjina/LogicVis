@@ -6,7 +6,7 @@ public class ParamList{
 	private ArrayList<String> params;		// An ArrayList that stores all parameters for this the current function call
 	private int depth;			// depth indicates the depth of this node in recursion
 	public ParamList next;			// Next node
-	
+	public String returnValue;
 	/*
 	 *Constructs a Paramlist and stores the depth information
 	 */
@@ -17,36 +17,21 @@ public class ParamList{
 	}
 	
 	/*
-	 * @param: name, the name of parameter; value the value of the string
-	 * Add a String value into params in a format "String n <-- value"
+	 * @param: name, the name of parameter; value the value of an Object
+	 * Add a toString value into params in a format "String n <-- value"
 	 */
-	public void addParam(String name, String value) {
-		params.add("String " + name + " <-- " + value);
+	public void addParam(String name, Object value) {
+		params.add(value.getClass().toString() + " " + name + " <-- " + value.toString());
 	}
 	
 	/*
-	 * @param: name, the name of parameter; value the value of the integer
-	 * Add a Integer value into params in a format "int n <-- value"
-	 */	
-	public void addParam(String name, int value) {
-		params.add("int " + name + " <-- " + value);
-	} 
-	
-	/*
-	 * @param: name, the name of parameter; value the value of the double
-	 * Add a double value into params in a format "double n <-- value"
+	 *  @param: value, the value of the returned Object
+	 *  Set the returned value
 	 */
-	public void addParam(String name, double value) {
-		params.add("double " + name + " <-- " + value);
+	public void addReturn(Object value) {
+		this.returnValue = value.toString();
 	}
 	
-	/*
-	 * @param: name, the name of parameter; value the value of the char
-	 * Add a char value into params in a format "char n <-- value"
-	 */
-	public void addParams(String name, char value) {
-		params.add("char " + name + " <-- " + value);
-	}
 	
 	// Return if the node has next node
 	public boolean hasNext() {
@@ -54,8 +39,12 @@ public class ParamList{
 	}
 	
 	// Return the depth of this node
-	public int getDepth(){
+	public int getDepth() {
 		return this.depth;
+	}
+	
+	public String getReturnValue() {
+		return returnValue;
 	}
 	
 	// Return a copy of the parameter lists

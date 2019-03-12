@@ -1,0 +1,22 @@
+Last Week's Goals
+------------------
+ - Finish drafting the final report
+ - Perform more user studies based on a newer version of the product, which does not yet have a definite date of completion
+ - Help complete the UI and GUI aspects of the project if it is necessary
+ - Expand more on the final report based on the progress that will be made in the following week
+
+Progress
+---------
+ - Performed peer review
+ - Discussed new implementation directions necessary to finish the project
+ - Did not perform user studies (responsibilities claimed by Jed)
+ - Edited final report according to feedback
+ - Expanded final report based on progress made
+ - Code review done for code submitted
+
+This Week's Goals
+------------------
+ - Polish the technical aspect of the final product (such as altering some code style or structure according to code review feedback)
+ - Polish the documentation aspect of the final product (add comments where the code review found to be lacking)
+ - Use the feedback that will be given this week to edit the report more
+ - Prepare for the final presentation (assign responsibilities and put contents necessary)

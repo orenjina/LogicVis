@@ -4,9 +4,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
-public class test {
+public class ExecutorTests {
 	public final static String FIBONACCI = "fibonacci.bsh";
-	public final static String HCF = "hcf.bsh";
+	public final static String HCF = "src/test/java/hcf.bsh";
 	
 	public static void main(String[] args) {
 		// testPreprocessorFib();
@@ -46,7 +46,7 @@ public class test {
 		String[] args = new String[2];
 		args[0] = Integer.toString(10);
 		args[1] = Integer.toString(11);
-		Executor exe = new Executor(code, args);
+		Executor exe = new Executor(new Preprocessor(code), args);
 		exe.printList();		
 	}
 	
@@ -54,7 +54,7 @@ public class test {
 		String code = readFile(FIBONACCI);
 		String[] args = new String[1];
 		args[0] = Integer.toString(6);
-		Executor exe = new Executor(code, args);
+		Executor exe = new Executor(new Preprocessor(code), args);
 		exe.printList();
 	}
 	

@@ -11,7 +11,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
 
-
+/*
+ * Takes in a tree of parsed code and the parameters passed in and generates a flow chart
+ */
 public class GraphGenerator {
 	double cur_x;
 	double cur_y;
@@ -28,10 +30,16 @@ public class GraphGenerator {
 	parser.Node root;
 	double latest_y;
 	
+	/*
+	 * Default constructing graph generator
+	 */
 	public GraphGenerator(parser.Node node, ArrayList<String> param) {
 		this(960 * 0.32, 720 * 0.5, node, param);
 	}
 	
+	/*
+	 * Constructing graph generator with a different canvas size
+	 */
 	public GraphGenerator(double weight, double height, parser.Node node, ArrayList<String> param) {
 		cur_x = 89;
 		cur_y = 30;
@@ -62,6 +70,9 @@ public class GraphGenerator {
 		construct();
 	}
 	
+	/*
+	 * Actually draw the nodes and edges on canvas
+	 */
 	private void draw(parser.Node node) {
 //		System.out.println(node.getContent());
 		switch (node.getType()) {
@@ -78,28 +89,33 @@ public class GraphGenerator {
 		}
 	}
 	
+	// draw return statement
 	private void drawReturnStatement(parser.Node node) {
 		// MVP
 		Pos cur = map.get(node);
 		UIUtil.drawRecurse(gc, node.getContent(), cur.x - this.scale_x / 2, cur.y, scale_x, scale_y);
 	}
 	
+	// draw condition statement
 	private void drawConditionStatement(parser.Node node) {
 		Pos cur = map.get(node);
 		UIUtil.drawConditional(gc, node.getContent(), cur.x - scale_x / 2, cur.y, scale_x, scale_y);
 	}
 	
+	// draw a normal statement
 	private void drawPlainStatement(parser.Node node) {
 		// MVP
 		Pos cur = map.get(node);
 		UIUtil.drawStatement(gc, node.getContent(), cur.x - this.scale_x / 2, cur.y, scale_x, scale_y);
 	}
 	
+	// link start to the first node
 	private void drawStartToRoot() {
 		Pos cur = map.get(root);
 		UIUtil.drawArrow(gc, 89, latest_y, cur.x, cur.y, true);
 	}
 	
+	// the method to call to draw the whole graph on canvas
 	public void paint() {
 		drawStartToRoot();
 		
@@ -114,6 +130,7 @@ public class GraphGenerator {
 		}
 	}
 	
+	// draw edge
 	private void paintConnect(parser.Node src, parser.Node dst, String statement) {
 		Pos x = map.get(src);
 		Pos y = map.get(dst);
@@ -144,6 +161,7 @@ public class GraphGenerator {
 		}
 	}
 	
+	// render the canvas in to an image
 	public WritableImage renderImage() {
 		WritableImage image = canvas.snapshot(null, null);
 		
@@ -153,6 +171,7 @@ public class GraphGenerator {
 		return image;
 	}
 	
+	// save the image to chart.png
 	private void save(WritableImage image) {
 //		// save file
 		File file = new File("chart.png");
@@ -165,6 +184,7 @@ public class GraphGenerator {
 	    }
 	}
 	
+	// making the canvas resizable
 	private class ResizableCanvas extends Canvas {
 		@Override
 		public boolean isResizable() {
@@ -172,6 +192,7 @@ public class GraphGenerator {
 		}
 	}
 	
+	// enpand the canvas when needed
 	private void expand() {
 
 		if (cur_y + 2 * scale_y > height) {
@@ -191,12 +212,14 @@ public class GraphGenerator {
 		}
 	}
 	
+	// construct the whole graph structure
 	private void construct() {
 		cur_y += scale_y;
 		range_y = cur_y;
 		configure(root);
 	}
 	
+	// find the true node among all children
 	private parser.Node getTrue(Map<parser.Node, String> children) {
 		for (parser.Node cur : children.keySet()) {
 			if (children.get(cur).equals("True")) {
@@ -206,6 +229,7 @@ public class GraphGenerator {
 		return null;
 	}
 	
+	// find the false node among all children
 	private parser.Node getFalse(Map<parser.Node, String> children) {
 		for (parser.Node cur : children.keySet()) {
 			if (children.get(cur).equals("False")) {
@@ -215,6 +239,7 @@ public class GraphGenerator {
 		return null;
 	}
 	
+	// configure the whole graph structure
 	public void configure(parser.Node node) {
 		System.out.println(node.getContent() + " " + cur_x);
 		expand();
@@ -232,11 +257,13 @@ public class GraphGenerator {
 		}
 	}
 	
+	// configure return statement
 	private void configureReturnStatement(parser.Node node) {
 		// TODO Auto-generated method stub
 		configurePlainStatement(node);
 	}
 
+	// configure plain statement
 	private void configurePlainStatement(parser.Node node) {
 		// TODO Auto-generated method stub
 		map.put(node, new Pos(cur_x, cur_y));
@@ -250,6 +277,7 @@ public class GraphGenerator {
 		}
 	}
 
+	// configure conditional statement
 	private void configureConditionStatement(parser.Node node) {
 		// TODO Auto-generated method stub
 		map.put(node, new Pos(cur_x, cur_y));
@@ -276,6 +304,7 @@ public class GraphGenerator {
 		if (!map.containsKey(not)) configure(not);
 	}
 	
+	// add edges to graph
 	private void connect(parser.Node src, parser.Node dst, String statement) {
 		if (!graph.containsKey(src)) {
 			graph.put(src, new HashMap<parser.Node, String>());
@@ -283,6 +312,7 @@ public class GraphGenerator {
 		graph.get(src).put(dst, statement);
 	}
 
+	// an object that stores the position of a node
 	private class Pos {
 		public double x;
 		public double y;

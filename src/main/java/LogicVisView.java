@@ -15,6 +15,7 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -25,7 +26,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -50,6 +51,13 @@ public class LogicVisView extends Application {
 		stage.setTitle("LogicVis");
 		AnchorPane layout = new AnchorPane();
 		AnchorPane picLayout = new AnchorPane();
+		ScrollPane sp = new ScrollPane();
+		sp.setPrefViewportHeight(y);
+		sp.setPrefViewportWidth(x);
+		sp.setFitToWidth(true);
+		VBox vb = new VBox();
+		vb.getChildren().add(layout);
+		sp.setContent(vb);
 		
 		// configure zoomed view
 		iv2 = new ImageView();
@@ -60,7 +68,7 @@ public class LogicVisView extends Application {
 		picLayout.getChildren().add(iv2);
 		
 		zoom = new Scene(picLayout, x, y);
-		Scene scene = new Scene(layout, x, y);
+		Scene scene = new Scene(sp, x, y);
 		
 		// configure label
 //		Label valueLabel = new Label();

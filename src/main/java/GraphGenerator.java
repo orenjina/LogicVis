@@ -62,6 +62,7 @@ public class GraphGenerator {
 		construct();
 	}
 	
+	// draws the next node of the graph
 	private void draw(parser.Node node) {
 //		System.out.println(node.getContent());
 		switch (node.getType()) {
@@ -78,17 +79,20 @@ public class GraphGenerator {
 		}
 	}
 	
+	// draws a return statement (rectangle and arrow outwards)
 	private void drawReturnStatement(parser.Node node) {
 		// MVP
 		Pos cur = map.get(node);
 		UIUtil.drawRecurse(gc, node.getContent(), cur.x - this.scale_x / 2, cur.y, scale_x, scale_y);
 	}
 	
+	// draws a conditional (if) statment (diamond and multiple arrows)
 	private void drawConditionStatement(parser.Node node) {
 		Pos cur = map.get(node);
 		UIUtil.drawConditional(gc, node.getContent(), cur.x - scale_x / 2, cur.y, scale_x, scale_y);
 	}
 	
+	// draws a normal statement (rectangle). This is all statements that are not conditional
 	private void drawPlainStatement(parser.Node node) {
 		// MVP
 		Pos cur = map.get(node);
@@ -144,6 +148,7 @@ public class GraphGenerator {
 		}
 	}
 	
+	// draws the image to the UI
 	public WritableImage renderImage() {
 		WritableImage image = canvas.snapshot(null, null);
 		
@@ -172,17 +177,15 @@ public class GraphGenerator {
 		}
 	}
 	
+	// zooms out on the canvas to fit the entire graph
 	private void expand() {
 
-		if (cur_y + 2 * scale_y > height) {
+		if (cur_y + 2 * scale_y > height || cur_x + 2 * scale_x > weight) {
 			// expand vertically
 			System.out.println("expand");
 			canvas.setHeight(height * 2);
 			height *= 2;
 			System.out.println("height = " + height);
-		}
-		
-		if (cur_x + 2 * scale_x > weight) {
 			// expand horizontally
 			System.out.println("expand");
 			canvas.setWidth(weight * 2);
@@ -197,6 +200,7 @@ public class GraphGenerator {
 		configure(root);
 	}
 	
+	// gets the true branch of an if statement
 	private parser.Node getTrue(Map<parser.Node, String> children) {
 		for (parser.Node cur : children.keySet()) {
 			if (children.get(cur).equals("True")) {
@@ -206,6 +210,7 @@ public class GraphGenerator {
 		return null;
 	}
 	
+	// gets the false branch of an if statement
 	private parser.Node getFalse(Map<parser.Node, String> children) {
 		for (parser.Node cur : children.keySet()) {
 			if (children.get(cur).equals("False")) {
@@ -215,6 +220,7 @@ public class GraphGenerator {
 		return null;
 	}
 	
+	// Adds the next node and its children to the map 
 	public void configure(parser.Node node) {
 		System.out.println(node.getContent() + " " + cur_x);
 		expand();
@@ -232,11 +238,13 @@ public class GraphGenerator {
 		}
 	}
 	
+	// adds a return statement into the map
 	private void configureReturnStatement(parser.Node node) {
 		// TODO Auto-generated method stub
 		configurePlainStatement(node);
 	}
 
+	// adds a generic statement into the map
 	private void configurePlainStatement(parser.Node node) {
 		// TODO Auto-generated method stub
 		map.put(node, new Pos(cur_x, cur_y));
@@ -250,6 +258,7 @@ public class GraphGenerator {
 		}
 	}
 
+	// adds a condition (if) statement into the map
 	private void configureConditionStatement(parser.Node node) {
 		// TODO Auto-generated method stub
 		map.put(node, new Pos(cur_x, cur_y));

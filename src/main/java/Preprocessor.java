@@ -86,8 +86,8 @@ public class Preprocessor {
 		if (title.length < 2) {
 			return false;
 		}
-		this.functionName = title[title.length - 1];
-		this.returnType = title[title.length - 2];
+		this.functionName = title[title.length - 1].trim();
+		this.returnType = title[title.length - 2].trim();
 		String param = code.substring(left + 1, right);
 		String[] params = param.split(",");
 		int num = params.length;
@@ -96,8 +96,10 @@ public class Preprocessor {
 		// Store all the parameters' types and names
 		for (int i = 0; i < num; i++) {
 			String[] splits = params[i].trim().split(" ");
-			this.parameterTypes[i] = splits[0];
-			this.parameterNames[i] = splits[1];
+			if (splits.length == 2) {
+				this.parameterTypes[i] = splits[0];
+				this.parameterNames[i] = splits[1];
+			}
 		}
 		// return if modifyCode succeeds or not
 		return modifyCode();
@@ -109,7 +111,11 @@ public class Preprocessor {
 		StringBuilder sb = new StringBuilder();
 		// get the Code with a parameter that stores depth.
 		String codeWithDepth = addDepthParam(code, functionName);
-		codeWithDepth = modifyReturn(codeWithDepth, returnType);
+		
+		// If the method type is not void, inject code to extract return value of each function call
+		if (!this.returnType.toLowerCase().equals("void")) {
+			codeWithDepth = modifyReturn(codeWithDepth, returnType);
+		}
 		int start = codeWithDepth.indexOf('{');
 		// If the code does not contain '{', return false
 		if (start == -1) {

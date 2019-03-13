@@ -21,7 +21,7 @@ public class ParamList{
 	 * Add a toString value into params in a format "String n <-- value"
 	 */
 	public void addParam(String name, Object value) {
-		params.add(value.getClass().toString() + " " + name + " <-- " + value.toString());
+		params.add(name + " <-- " + value.toString());
 	}
 	
 	/*

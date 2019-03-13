@@ -14,20 +14,33 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
+/**
+ * enum Type, NONE is the general type without any special shapes reflected on the GUI
+ */
 enum Type {
-    // none is the general type without any special shapes
     NONE, CONDITION, RETURN
 }
 
-// parser class that currently takes in a file containing a class, which should contain the user
-// input class.
-public class parser {
+/**
+ * parser is a class that takes in java methods (recursive or non recursive) and parse them into
+ * a tree structure (Node) defined in this file
+ */
+public class Parser {
+    // head of the AST
     private CompilationUnit cu;
+
+    // temporary storage of the method
     private final String fileName = "methodFile.java";
+
+    // list containing all recursion nodes in the order of the code and number of appearances of
+    // the node matches with the number of recursion calls in the line
     private List<Node> containRecurNode;
 
-    // takes in the user input method as one string
-    public parser(String method) {
+    /**
+     * Constructor, parse the given method into an AST
+     * @param method the entire user input method in a string
+     */
+    public Parser(String method) {
         try {
             PrintWriter out = new PrintWriter(fileName, "UTF-8");
             out.println("public class methodFile {");
@@ -42,13 +55,23 @@ public class parser {
         }
     }
 
+    /**
+     * get all methods in AST structure
+     * @return a list of AST with MethodDeclaration as a root
+     */
     public List<MethodDeclaration> getAllMethods() {
         List<MethodDeclaration> methods = new ArrayList<>();
-        VoidVisitor<List<MethodDeclaration>> methodCollector = new parser.MethodCollector();
+        VoidVisitor<List<MethodDeclaration>> methodCollector = new Parser.MethodCollector();
         methodCollector.visit(cu, methods);
         return methods;
     }
 
+    /**
+     * get the specific method with the given name in AST structure
+     * @param name the user input method name as a string
+     * @return a JavaParser MethodDeclaration, which is an AST subtree, null if such method is
+     * not found
+     */
     public MethodDeclaration getMethod(String name) {
         List<MethodDeclaration> all = getAllMethods();
         for (MethodDeclaration method : all) {
@@ -59,8 +82,12 @@ public class parser {
         return null;
     }
 
-    // traverse the method with the input name
-    // returns null when method is empty
+    /**
+     * traverse the method with the given name, build tree and output the root node of the tree
+     * @param name the user input method name as a string
+     * @return the root node of the tree generated from the method with the given name, null when
+     * the method is empty or does not exist
+     */
     public Node traverse(String name) {
         MethodDeclaration method = getMethod(name);
         if (method == null) {
@@ -70,8 +97,12 @@ public class parser {
         return listStmts(stmts, new HashSet<>());
     }
 
-    // traverse the first method, which should be the user input method
-    // returns null when method is empty
+    /**
+     * traverse the first method (in this implementation should be the user input method) , build
+     * tree and output the root node of the tree
+     * @return the root node of the tree generated from the first method, null when the method is
+     * empty or does not exist
+     */
     public Node traverseFirst() {
         List<MethodDeclaration> methods = getAllMethods();
         if (methods == null || methods.size() == 0) {
@@ -85,12 +116,23 @@ public class parser {
         return listStmts(stmts, new HashSet<>());
     }
 
-    // call after traverse
+    /**
+     * outputs a list containing nodes with recursions in them
+     * @return a list of nodes containing recursion calls in the order of appearing in the
+     * original code, a node that contains multiple recursion calls which show up the same number
+     * of times in the list returned
+     * @precondition traverse or traverseFirst has to be called before this method gets called,
+     * since the returned list reflects the recursion calls in the method which was just traversed
+     */
     public List<Node> getRecurNodes() {
         List<Node> newList = new ArrayList<>(containRecurNode);
         return newList;
     }
 
+    /**
+     * outputs the first function name in the file
+     * @return a string containing the first function name in the written file
+     */
     public String getFirstFunctionName() {
         List<MethodDeclaration> methods = getAllMethods();
         if (methods == null || methods.size() == 0) {
@@ -103,8 +145,18 @@ public class parser {
         return method.getNameAsString();
     }
 
-    // handles block statement
+    /**
+     * creates a subtree of a NodeList of Statements (processed block statements), containing
+     * nodes corresponding to the given line/blocks of code
+     * @param stmts a NodeList of statements
+     * @param endNodes the set for containing leave nodes of this subtree, will be added by this
+     *                 method
+     * @return the root node of this subtree
+     */
     private Node listStmts(NodeList<Statement> stmts, Set<Node> endNodes) {
+        // this method calls the oneStmtDispatch to process each single statement and then
+        // connect them together from the last one's end nodes to the next one's root node.
+
         Node root = null;
         Set<Node> lastNodes = new HashSet<>();
         for (Statement stmt : stmts) {
@@ -131,6 +183,14 @@ public class parser {
         return root;
     }
 
+    /**
+     * creates a subtree of a JavaParser Statement, containing nodes corresponding to the
+     * given line/blocks of code
+     * @param cur a JavaParser Statement that will be contained in the subtree returned
+     * @param endNodes the set for containing leave nodes of this subtree, will be added by this
+     *                 method
+     * @return the root node of this subtree
+     */
     private Node oneStmtDispatch(Statement cur, Set<Node> endNodes) {
         if (cur.isBlockStmt()) {
             return listStmts(cur.asBlockStmt().getStatements(), endNodes);
@@ -144,10 +204,10 @@ public class parser {
             return next;
         } else if (cur.isForStmt()) {
             ForStmt forst = cur.asForStmt();
-            return forOPerations(forst, endNodes);
+            return forOperations(forst, endNodes);
         } else if (cur.isWhileStmt()) {
             WhileStmt whilest = cur.asWhileStmt();
-            return whileOPerations(whilest, endNodes);
+            return whileOperations(whilest, endNodes);
         } else if (cur.isExpressionStmt()) {
             ExpressionStmt expst = cur.asExpressionStmt();
             return expstmtOperations(expst, endNodes);
@@ -158,6 +218,14 @@ public class parser {
         }
     }
 
+    /**
+     * creates a subtree of a JavaParser ExpressionStmt, containing nodes corresponding to the
+     * given line/blocks of code
+     * @param expst a JavaParser ExpressionStmt that will be contained in the subtree returned
+     * @param endNodes the set for containing leave nodes of this subtree, will be added by this
+     *                 method
+     * @return the root node of this subtree
+     */
     private Node expstmtOperations(ExpressionStmt expst, Set<Node> endNodes) {
         Expression exp = expst.getExpression();
         Node root = expOperations(Type.NONE, exp);
@@ -165,7 +233,14 @@ public class parser {
         return root;
     }
 
-    // if-elseif-else handler
+    /**
+     * creates a subtree of a JavaParser IfStmt, containing nodes corresponding to the given
+     * line/blocks of code
+     * @param ifst a JavaParser IfStmt that will be contained in the subtree returned
+     * @param endNodes the set for containing leave nodes of this subtree, will be added by this
+     *                 method
+     * @return the root node of this subtree
+     */
     private Node ifOperations(IfStmt ifst, Set<Node> endNodes) {
         // takes care of the if condition check
         Node root = expOperations(Type.CONDITION, ifst.getCondition());
@@ -180,10 +255,16 @@ public class parser {
         return root;
     }
 
+    /**
+     * creates a node for a JavaParser Expression, updates the containRecurNode field
+     * @param t a Type that will be the Type of the node created
+     * @param ex a JavaParser Expression that is parsed to be this node
+     * @return the node of this Expression
+     */
     private Node expOperations(Type t, Expression ex) {
         Node n = new Node(t, ex.toString());
         List<MethodCallExpr> allMethodCall = new ArrayList<>();
-        VoidVisitor<List<MethodCallExpr>> expVisitor = new parser.ExpressionVisitor();
+        VoidVisitor<List<MethodCallExpr>> expVisitor = new Parser.ExpressionVisitor();
         MethodCallExpr expst = new MethodCallExpr(null, getFirstFunctionName()+"wrapper",
                 new NodeList<>(ex));
         expVisitor.visit(expst, allMethodCall);
@@ -198,7 +279,14 @@ public class parser {
         return n;
     }
 
-    // list of expression handler
+    /**
+     * creates a subtree of a JavaParser NodeList of Expression, containing nodes corresponding
+     * to the given line/blocks of code
+     * @param exp a JavaParser NodeList of Expression that will be contained in the subtree returned
+     * @param endNodes the set for containing leave nodes of this subtree, will be added by this
+     *                 method
+     * @return the root node of this subtree
+     */
     private Node listExpOperations(NodeList<Expression> exp, List<Node> endNodes) {
         Node root = expOperations(Type.NONE, exp.get(0));
         Node last = root;
@@ -211,8 +299,20 @@ public class parser {
         return root;
     }
 
-    // standard three arguments for loop handler
-    private Node forOPerations(ForStmt forst, Set<Node> endNodes) {
+    /**
+     * creates a subtree of a JavaParser ForStmt, containing nodes corresponding to the given
+     * line/blocks of code
+     * @param forst a JavaParser ForStmt that will be contained in the subtree returned
+     * @param endNodes the set for containing leave nodes of this subtree, will be added by this
+     *                 method
+     * @return the root node of this subtree
+     */
+    private Node forOperations(ForStmt forst, Set<Node> endNodes) {
+        // this method will handle the initialization and condition first where initialization
+        // will be treated as a normal expression and condition will be parsed into a condition
+        // node. Then the body will point to the update node, which is connected to the condition
+        // node.
+
         // INITIALIZATION
         NodeList<Expression> init = forst.getInitialization();
         List<Node> lastOne = new ArrayList<>();
@@ -241,9 +341,17 @@ public class parser {
         return root;
     }
 
-    // standard while loop handler (should handle all while loops since it doesn't have
-    // formatting variations)
-    private Node whileOPerations(WhileStmt whilest, Set<Node> endNodes) {
+    /**
+     * creates a subtree of a JavaParser WhileStmt, containing nodes corresponding to the given
+     * line/blocks of code
+     * @param whilest a JavaParser WhileStmt that will be contained in the subtree returned
+     * @param endNodes the set for containing leave nodes of this subtree, will be added by this
+     *                 method
+     * @return the root node of this subtree
+     */
+    private Node whileOperations(WhileStmt whilest, Set<Node> endNodes) {
+        // get parsed into a condition node and the rest of the body in nodes
+
         Node cond = expOperations(Type.CONDITION, whilest.getCondition());
         // while operation always ends on the condition
         endNodes.add(cond);
@@ -254,6 +362,10 @@ public class parser {
         return cond;
     }
 
+    /**
+     * Overrides the original MethodDeclaration visit, this method visits all MethodDeclaration 
+     * nodes in the given MethodDeclaration as well as itself and add it into the list collector
+     */
     private static class MethodCollector extends VoidVisitorAdapter<List<MethodDeclaration>> {
         @Override
         public void visit(MethodDeclaration md, List<MethodDeclaration> collector) {
@@ -262,21 +374,26 @@ public class parser {
         }
     }
 
+    /**
+     * Overrides the original MethodCallExpr visit, this method visits all MethodCallExpr 
+     * nodes in the given MethodCallExpr as well as itself and add it into the list collector
+     */
     private static class ExpressionVisitor extends VoidVisitorAdapter<List<MethodCallExpr>> {
         @Override
-        public void visit(MethodCallExpr exp, List<MethodCallExpr> l) {
+        public void visit(MethodCallExpr exp, List<MethodCallExpr> collector) {
             // Found a method call
             // Don't forget to call super, it may find more method calls inside the arguments of this method call, for example.
-            super.visit(exp, l);
-            l.add(exp);
+            super.visit(exp, collector);
+            collector.add(exp);
         }
     }
 
-    // The official tree(implemented as a pure Node class) for the output tree structure
+    /**
+     * Node class that contains all the information from the original code base
+     */
     public class Node {
-        // Content is the string that should be shown in the shape. currently it just takes what
-        // is given and show it directly with no modification (example: int x = 0; will be added
-        // directly as content)
+        // Content is the string that is shown in the shape. It contains the code from the line
+        // that is corresponding to this node
         private String content;
 
         // Type is an Enum (see top). Front end should be utilizing the type to build shapes
@@ -284,9 +401,14 @@ public class parser {
         private Type t;
 
         // Maps child node to its edge label (example: if condition, labels could be "True" or
-        // "False"). When no label needed, the value is set to be "".
+        // "False"). When no label needed, the value is set to be an empty string
         private HashMap<Node, String> children;
 
+        /**
+         * constructor, set the type and the content of this node to be the given type and content
+         * @param t enum Type, possible values are NONE, CONDITION, and RETURN
+         * @param content a string containing the code, which is displayed in the shape in GUI
+         */
         public Node(Type t, String content) {
             this.t = t;
             this.children = new HashMap<>();
@@ -295,18 +417,39 @@ public class parser {
                 this.content = this.content.substring(0, this.content.length()-1);
         }
 
+        /**
+         * get the content of the node
+         * @return a string containing the code, which is displayed in the shape in GUI
+         */
         public String getContent() {
             return content;
         }
 
+        /**
+         * get the type of the node
+         * @return enum Type, possible values are NONE, CONDITION, and RETURN
+         */
         public Type getType() {
             return t;
         }
 
+        /**
+         * get the children with the tag on the arrows
+         * @return a HashMap<Node, String> that maps the child node to the label on the arrow
+         * pointing from the parent to the child
+         */
         public HashMap<Node, String> getChildren() {
             return (HashMap<Node, String>) children.clone();
         }
 
+        /**
+         * add a child node to this node
+         * @param child the child node that is being added
+         * @param tag a string containing the label on the arrow pointing from the parent to the
+         *            child
+         * @return true when the child does not already exist and sucessfully got added to the
+         * parent, false when the child already exists
+         */
         public boolean addChild(Node child, String tag) {
             if (children.containsKey(child)) {
                 return false;

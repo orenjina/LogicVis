@@ -157,7 +157,6 @@ public class GraphGenerator {
 				System.out.println(2);
 				UIUtil.drawLineArrowHorizontal(gc, statement, x.x, x.y + scale_y, y.x + scale_x / 2 , y.y + scale_y / 2);
 			}
-			
 		}
 	}
 	

@@ -40,7 +40,7 @@ public class LogicVisView extends Application {
 		AnchorPane picLayout = new AnchorPane();
 		ImageView iv2 = new ImageView();
 		iv2.setFitHeight(y);
-		iv2.setFitWidth(x);
+		iv2.setFitWidth(x * 0.64);
 		AnchorPane.setLeftAnchor(iv2, 0.0);
 		AnchorPane.setTopAnchor(iv2, 0.0);
 		picLayout.getChildren().add(iv2);

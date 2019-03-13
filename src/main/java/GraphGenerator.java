@@ -11,12 +11,19 @@ import javafx.scene.image.WritableImage;
 
 
 public class GraphGenerator {
+	// Factor at which to increase the size of the canvas
+	private static final double SCALE_THRESHOLD = 1.5;
+	
+	// Starting draw coordinates
+	private static final int INITIAL_X = 150;
+	private static final int INITIAL_Y = 30;
+	
+	// Current coordinates to draw at
 	double cur_x;
 	double cur_y;
-	double weight;
+	
+	double width;
 	double height;
-	double scale_x = 80;
-	double scale_y = 36;
 	ResizableCanvas canvas;
 	GraphicsContext gc;
 	
@@ -24,22 +31,18 @@ public class GraphGenerator {
 		this(960 * 0.32, 720 * 0.5);
 	}
 	
-	public GraphGenerator(double weight, double height) {
-		cur_x = 89;
-		cur_y = 30;
-		canvas = new ResizableCanvas();
-		canvas.setWidth(weight);
-		canvas.setHeight(height);
-		this.weight = weight;
-		this.height = height;
-		this.gc = canvas.getGraphicsContext2D();
-		gc.setLineWidth(1);
-		UIUtil.drawStart(gc, cur_x - this.scale_x / 2, cur_y, this.scale_x, this.scale_y);
-		cur_y += this.scale_y; 
+	public GraphGenerator(double width, double height) {
+		reset();
 	}
 	
-	public void draw(parser.Node node, Boolean withArrow) {
+	public void draw(parser.Node node, boolean withArrow) {
 		expand();
+		
+		if (withArrow) {
+			UIUtil.drawArrow(gc, cur_x, cur_y, true);
+			cur_y += UIUtil.VERTICAL_ARROW_LENGTH;
+		}
+		
 		System.out.println(node.getContent());
 		switch (node.getType()) {
 			case CONDITION:
@@ -55,59 +58,60 @@ public class GraphGenerator {
 		}
 	}
 	
-	private void drawReturnStatement(parser.Node node, Boolean withArrow) {
+	private void drawReturnStatement(parser.Node node, boolean withArrow) {
 		// MVP
-		if (withArrow) {
-			UIUtil.drawArrow(gc, cur_x, cur_y, cur_x, cur_y + scale_y, true);
-			cur_y += scale_y;
-		}
-		UIUtil.drawRecurse(gc, node.getContent(), cur_x - this.scale_x / 2, cur_y, scale_x, scale_y);
-		cur_y += scale_y;
+		String statement = node.getContent();
+		double width = UIUtil.calculateTextboxWidth(statement);
+		UIUtil.drawRecurse(gc, statement, cur_x - width / 2, cur_y);
+		cur_y += UIUtil.SHAPE_HEIGHT;
 		
+		// Shouldn't have to do this?
+		/*
 		Map<parser.Node, String> children = node.getChildren();
 		for (parser.Node cur : children.keySet()) {
 			draw(cur, true);
 		}
+		*/
 	}
 	
-	private void drawConditionStatement(parser.Node node, Boolean withArrow) {
-		if (withArrow) {
-			UIUtil.drawArrow(gc, cur_x, cur_y, cur_x, cur_y + scale_y, true);
-			cur_y += scale_y;
-		}
-		UIUtil.drawConditional(gc, node.getContent(), cur_x - scale_x / 2, cur_y, scale_x, scale_y);
-		cur_y += this.scale_y; 
+	private void drawConditionStatement(parser.Node node, boolean withArrow) {
+		String statement = node.getContent();
+		double width = UIUtil.calculateTextboxWidth(statement);
+		UIUtil.drawConditional(gc, statement, cur_x - width / 2, cur_y);
+		cur_y += UIUtil.SHAPE_HEIGHT; 
 		double temp_x = cur_x;
 		double temp_y = cur_y;
 		Map<parser.Node, String> children = node.getChildren();
 		for (parser.Node cur : children.keySet()) {
 			if (children.get(cur).equals("False")) {
-				double start_x = cur_x + scale_x / 2;
-				double start_y = cur_y - scale_y / 2;
-				UIUtil.drawArrowRight(gc, "False", start_x, start_y, scale_x / 2);
-				cur_x = start_x + scale_x;
-				cur_y -= scale_y;
+				double start_x = cur_x + width / 2;
+				double start_y = cur_y - UIUtil.SHAPE_HEIGHT / 2;
+				UIUtil.drawArrowRight(gc, "False", start_x, start_y);
+				cur_x = start_x + UIUtil.HORIZONTAL_ARROW_LENGTH + UIUtil.calculateTextboxWidth(cur.getContent()) / 2;
+				cur_y -= UIUtil.SHAPE_HEIGHT;
 				draw(cur, false);
+				
+				// Reset draw coordinates
 				cur_x = temp_x;
 				cur_y = temp_y;
 			} else {
-				UIUtil.drawArrowDown(gc, "True", cur_x, cur_y, scale_y);
-				cur_y += scale_y;
+				UIUtil.drawArrowDown(gc, "True", cur_x, cur_y);
+				cur_y += UIUtil.VERTICAL_ARROW_LENGTH;
 				draw(cur, false);
+				
+				// Reset draw coordinates
 				cur_x = temp_x;
 				cur_y = temp_y;
 			}
 		}
 	}
 	
-	private void drawPlainStatement(parser.Node node, Boolean withArrow) {
+	private void drawPlainStatement(parser.Node node, boolean withArrow) {
 		// MVP
-		if (withArrow) {
-			UIUtil.drawArrow(gc, cur_x, cur_y, cur_x, cur_y + scale_y, true);
-			cur_y += scale_y;
-		}
-		UIUtil.drawStatement(gc, node.getContent(), cur_x - this.scale_x / 2, cur_y, scale_x, scale_y);
-		cur_y += scale_y;
+		String statement = node.getContent();
+		double width = UIUtil.calculateTextboxWidth(statement);
+		UIUtil.drawStatement(gc, statement, cur_x - width / 2, cur_y);
+		cur_y += UIUtil.SHAPE_HEIGHT;
 		
 		Map<parser.Node, String> children = node.getChildren();
 		for (parser.Node cur : children.keySet()) {
@@ -125,7 +129,7 @@ public class GraphGenerator {
 	}
 	
 	private void save(WritableImage image) {
-//		// save file
+		// save file
 		File file = new File("chart.png");
 		BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
 	    try {
@@ -148,35 +152,27 @@ public class GraphGenerator {
 	}
 	
 	public void reset(double weight, double height) {
-		cur_x = 89;
-		cur_y = 30;
+		cur_x = INITIAL_X;
+		cur_y = INITIAL_Y;
 		canvas = new ResizableCanvas(); 
 		canvas.setWidth(weight);
 		canvas.setHeight(height);
-		this.weight = weight;
+		this.width = weight;
 		this.height = height;
 		this.gc = canvas.getGraphicsContext2D();
 		gc.setLineWidth(1);
-		UIUtil.drawStart(gc, cur_x - this.scale_x / 2, cur_y, this.scale_x, this.scale_y);
-		cur_y += this.scale_y; 
+		UIUtil.drawStart(gc, cur_x - UIUtil.MIN_WIDTH / 2, cur_y);
+		cur_y += UIUtil.SHAPE_HEIGHT; 
 	}
 	
 	private void expand() {
-
-		if (cur_y + 2 * scale_y > height) {
-			// expand vertically
+		if (cur_y + SCALE_THRESHOLD * UIUtil.SHAPE_HEIGHT > height || cur_x + SCALE_THRESHOLD * UIUtil.MIN_WIDTH > width) {
+			// expand 
 			System.out.println("expand");
-			canvas.setHeight(height * 2);
-			height *= 2;
-			System.out.println("height = " + height);
-		}
-		
-		if (cur_x + 2 * scale_x > weight) {
-			// expand horizontally
-			System.out.println("expand");
-			canvas.setWidth(weight * 2);
-			weight *= 2;
-			System.out.println("weight = " + weight);
+			height *= SCALE_THRESHOLD;
+			width *= SCALE_THRESHOLD;
+			canvas.setHeight(height);
+			canvas.setWidth(width);
 		}
 	}
 }

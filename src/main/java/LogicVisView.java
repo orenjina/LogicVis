@@ -1,11 +1,10 @@
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Stack;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -25,10 +24,8 @@ import javafx.scene.layout.AnchorPane;
 
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 
 public class LogicVisView extends Application {
 	
@@ -155,7 +152,6 @@ public class LogicVisView extends Application {
 		});
 		
 		// configure zoom scene
-		
 		iv2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 
 		     @Override
@@ -165,34 +161,27 @@ public class LogicVisView extends Application {
 		     }
 		});
 		
-		
-		
-		configureLayout(button, next, inputText, inputLabel, outText);
+		// configure resizing window
 		stage.setMinWidth(x);
 		stage.setMinHeight(y);
 		
-		// configure resizing window
-		stage.widthProperty().addListener((obs, oldVal, newVal) -> {
+		ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> {
 			recalculateBounds();
 			configureLayout(button, next, inputText, inputLabel, outText);
 			if (action != null) {
 				display(layout, action.getCurrentState());
 			}
-		});
+		};
 
-		stage.heightProperty().addListener((obs, oldVal, newVal) -> {
-			recalculateBounds();
-			configureLayout(button, next, inputText, inputLabel, outText);
-			if (action != null) {
-				display(layout, action.getCurrentState());
-			}
-		});
+		stage.widthProperty().addListener(stageSizeListener);
+		stage.heightProperty().addListener(stageSizeListener);
 		
+		// configure scrolling buttons
 		sp.hvalueProperty().addListener((obs, oldVal, newVal) -> {
-			// Percentages
-			
 			moveButtons(button, next);
 		});
+
+		configureLayout(button, next, inputText, inputLabel, outText);
 		
 		// adding button to the pane
 		layout.getChildren().addAll(button, inputText, inputLabel, outText, next);

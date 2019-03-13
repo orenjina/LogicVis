@@ -1,0 +1,7 @@
+ void addFive (int i) {
+ 	if (i == 0) {
+ 		return;
+ 	}
+ 	int b = i + 5;
+ 	addFive(i - 1);
+ }

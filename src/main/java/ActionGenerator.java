@@ -30,6 +30,15 @@ public class ActionGenerator {
 		}
 	}
 	
+	// Return the number of parameters in this function. 
+	public int getParameterNum(){
+		if (this.preprocessor.parameterTypes.length == 1 && this.preprocessor.parameterTypes[0] == null) {
+			return 0;
+		} else {
+			return this.preprocessor.parameterTypes.length;
+		}
+	}
+	
 	// Return an array of parameter types of this method
 	public String[] getParameterTypes(){
 		return this.preprocessor.parameterTypes;

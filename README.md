@@ -15,3 +15,5 @@ Then, you should be able to see string representation print out of a tree in the
 In addition, there will be a pop-up that represents the basic representation of the UI we plan to make. Users can put in any standalone method and acquire a control flow graph as an output when they press the "Let's do it" button. The graph currently does not handle recursion separately and has visual clutter occasionally, but is representative of the code that was put in.
 
 2. Directly check the scripts in the scripts folder and run each command independently.
+
+3. *Be aware that in the input box, you need to add "{ }" around the code in "if statement". For example, instead of writing "if (a) return 0;", write "if (a) { return 0; }". We are currently working on solving this problem.

@@ -193,20 +193,15 @@ public class GraphGenerator {
 	
 	// enpand the canvas when needed
 	private void expand() {
-
-		if (cur_y + 2 * scale_y > height) {
-			// expand vertically
+		if (cur_y + 2 * scale_y > height || cur_x + 2 * scale_x > weight) {
+			// expand
 			System.out.println("expand");
-			canvas.setHeight(height * 2);
-			height *= 2;
+			height *= 1.5;
+			canvas.setHeight(height);
 			System.out.println("height = " + height);
-		}
-		
-		if (cur_x + 2 * scale_x > weight) {
-			// expand horizontally
 			System.out.println("expand");
-			canvas.setWidth(weight * 2);
-			weight *= 2;
+			weight *= 1.5;
+			canvas.setWidth(weight);
 			System.out.println("weight = " + weight);
 		}
 	}

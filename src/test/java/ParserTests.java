@@ -19,37 +19,37 @@ public class ParserTests {
 
     @Test
     public void testParseEmptyMethod() {
-	parser p = new parser(emptyMethod);
+	Parser p = new Parser(emptyMethod);
 	assertEquals(1, p.getAllMethods().size());
     }
 
     @Test
     public void testParseReturnMethod() {
-	parser p = new parser(returnMethod);
+	Parser p = new Parser(returnMethod);
 	assertEquals(1, p.getAllMethods().size());
     }
 
     @Test
     public void testParseParameterMethod() {
-	parser p = new parser(parameterMethod);
+	Parser p = new Parser(parameterMethod);
 	assertEquals(1, p.getAllMethods().size());
     }
 
     @Test
     public void testParsePrivateMethod() {
-	parser p = new parser(emptyMethod);
+	Parser p = new Parser(emptyMethod);
 	assertEquals(1, p.getAllMethods().size());
     }
 
     @Test
     public void testParseMultipleMethod() {
-	parser p = new parser(emptyMethod + returnMethod);
+	Parser p = new Parser(emptyMethod + returnMethod);
 	assertEquals(2, p.getAllMethods().size());
     }
 
     @Test
     public void testParseRecursiveMethod() {
-	parser p = new parser(recursiveMethod);
+	Parser p = new Parser(recursiveMethod);
 	assertEquals(1, p.getAllMethods().size());
     }
 
@@ -60,7 +60,7 @@ public class ParserTests {
 
     @Test
     public void testGetMethod() {
-	parser p = new parser(recursiveMethod);
+	Parser p = new Parser(recursiveMethod);
 	assertEquals(1, p.getAllMethods().size());
 	assertEquals(null, p.getMethod("helloworld"));
 	if (p.getMethod("recursiveMethod") == null) {
@@ -70,35 +70,35 @@ public class ParserTests {
 
     @Test
     public void testEmptyTraverse() {
-	parser p = new parser(emptyMethod);	
-	parser.Node root = p.traverse("emptyMethod");
+	Parser p = new Parser(emptyMethod);
+	Parser.Node root = p.traverse("emptyMethod");
 	assertEquals(null, root);
     }
 
     @Test
     public void testSimpleTraverse() {
-	parser p = new parser(parameterMethod);
-	parser.Node root = p.traverse("parameterMethod");
-	HashMap<parser.Node, String> map = root.getChildren();
+	Parser p = new Parser(parameterMethod);
+	Parser.Node root = p.traverse("parameterMethod");
+	HashMap<Parser.Node, String> map = root.getChildren();
 	assertEquals(0, map.size());
 	assertEquals("x++", root.getContent());
     }
 
     @Test
     public void testRecursiveTraverse() {
-	parser p = new parser(recursiveMethod);
+	Parser p = new Parser(recursiveMethod);
 	int size = 0;
-	Queue<parser.Node> queue = new LinkedList<parser.Node>();
+	Queue<Parser.Node> queue = new LinkedList<Parser.Node>();
 	Set<String> lines = new HashSet<String>();
 	queue.add(p.traverse("recursiveMethod"));
 	size++;
 	boolean oneTrue = false;
 	boolean oneFalse = false;
 	do {
-	    parser.Node next = queue.remove();
+	    Parser.Node next = queue.remove();
 	    lines.add(next.getContent());
-	    HashMap<parser.Node, String> map = next.getChildren();
-	    for (parser.Node n : map.keySet()) {
+	    HashMap<Parser.Node, String> map = next.getChildren();
+	    for (Parser.Node n : map.keySet()) {
 	        String tag = map.get(n);
 		if (tag.equals("True")) {
 		    if (!oneTrue) {
@@ -128,18 +128,18 @@ public class ParserTests {
 
     @Test
     public void testForLoopTraverse() {
-	parser p = new parser(forLoopMethod);
+	Parser p = new Parser(forLoopMethod);
 	int size = 0;
-	Queue<parser.Node> queue = new LinkedList<parser.Node>();
+	Queue<Parser.Node> queue = new LinkedList<Parser.Node>();
 	Set<String> lines = new HashSet<String>();
 	queue.add(p.traverse("forLoopMethod"));
 	size++;
 	boolean oneTrue = false;
 	do {
-	    parser.Node next = queue.remove();
+	    Parser.Node next = queue.remove();
 	    lines.add(next.getContent());
-	    HashMap<parser.Node, String> map = next.getChildren();
-	    for (parser.Node n : map.keySet()) {
+	    HashMap<Parser.Node, String> map = next.getChildren();
+	    for (Parser.Node n : map.keySet()) {
 	        String tag = map.get(n);
 		if (tag.equals("True")) {
 		    if (!oneTrue) {

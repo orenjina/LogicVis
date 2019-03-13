@@ -38,7 +38,7 @@ public class GraphGenerator {
 		cur_y += this.scale_y; 
 	}
 	
-	public void draw(parser.Node node, Boolean withArrow) {
+	public void draw(Parser.Node node, Boolean withArrow) {
 		expand();
 		System.out.println(node.getContent());
 		switch (node.getType()) {
@@ -55,7 +55,7 @@ public class GraphGenerator {
 		}
 	}
 	
-	private void drawReturnStatement(parser.Node node, Boolean withArrow) {
+	private void drawReturnStatement(Parser.Node node, Boolean withArrow) {
 		// MVP
 		if (withArrow) {
 			UIUtil.drawArrow(gc, cur_x, cur_y, cur_x, cur_y + scale_y, true);
@@ -64,13 +64,13 @@ public class GraphGenerator {
 		UIUtil.drawRecurse(gc, node.getContent(), cur_x - this.scale_x / 2, cur_y, scale_x, scale_y);
 		cur_y += scale_y;
 		
-		Map<parser.Node, String> children = node.getChildren();
-		for (parser.Node cur : children.keySet()) {
+		Map<Parser.Node, String> children = node.getChildren();
+		for (Parser.Node cur : children.keySet()) {
 			draw(cur, true);
 		}
 	}
 	
-	private void drawConditionStatement(parser.Node node, Boolean withArrow) {
+	private void drawConditionStatement(Parser.Node node, Boolean withArrow) {
 		if (withArrow) {
 			UIUtil.drawArrow(gc, cur_x, cur_y, cur_x, cur_y + scale_y, true);
 			cur_y += scale_y;
@@ -79,8 +79,8 @@ public class GraphGenerator {
 		cur_y += this.scale_y; 
 		double temp_x = cur_x;
 		double temp_y = cur_y;
-		Map<parser.Node, String> children = node.getChildren();
-		for (parser.Node cur : children.keySet()) {
+		Map<Parser.Node, String> children = node.getChildren();
+		for (Parser.Node cur : children.keySet()) {
 			if (children.get(cur).equals("False")) {
 				double start_x = cur_x + scale_x / 2;
 				double start_y = cur_y - scale_y / 2;
@@ -100,7 +100,7 @@ public class GraphGenerator {
 		}
 	}
 	
-	private void drawPlainStatement(parser.Node node, Boolean withArrow) {
+	private void drawPlainStatement(Parser.Node node, Boolean withArrow) {
 		// MVP
 		if (withArrow) {
 			UIUtil.drawArrow(gc, cur_x, cur_y, cur_x, cur_y + scale_y, true);
@@ -109,8 +109,8 @@ public class GraphGenerator {
 		UIUtil.drawStatement(gc, node.getContent(), cur_x - this.scale_x / 2, cur_y, scale_x, scale_y);
 		cur_y += scale_y;
 		
-		Map<parser.Node, String> children = node.getChildren();
-		for (parser.Node cur : children.keySet()) {
+		Map<Parser.Node, String> children = node.getChildren();
+		for (Parser.Node cur : children.keySet()) {
 			draw(cur, true);
 		}
 	}

@@ -34,7 +34,7 @@ public class GGTest extends Application
 //        MethodDeclaration m = par.getMethod("recur");
         parser.Node r = par.traverse("a");
          
-        GraphGenerator gg = new GraphGenerator(400, 200, r);
+        GraphGenerator gg = new GraphGenerator(400, 200, r, null);
         // Get the graphics context of the canvas
         GraphicsContext gc = canvas.getGraphicsContext2D();
          
@@ -65,7 +65,7 @@ public class GGTest extends Application
         stage.show();  
 	}
 	
-	private int a() {
+	private int a(int num) {
 		int b = 2;
 		if (1 == 1) {
 			int one = 1;
@@ -90,5 +90,12 @@ public class GGTest extends Application
 		}
 		int b = 5;
 		return 5;
+	}
+	
+	private void recur(int num) {
+		if (num > 0) {
+			recur(num - 1);
+		}
+		
 	}
 }

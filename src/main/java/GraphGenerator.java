@@ -1,6 +1,7 @@
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,12 +26,13 @@ public class GraphGenerator {
 	double range_x;
 	double range_y;
 	parser.Node root;
+	double latest_y;
 	
-	public GraphGenerator(parser.Node node) {
-		this(960 * 0.32, 720 * 0.5, node);
+	public GraphGenerator(parser.Node node, ArrayList<String> param) {
+		this(960 * 0.32, 720 * 0.5, node, param);
 	}
 	
-	public GraphGenerator(double weight, double height, parser.Node node) {
+	public GraphGenerator(double weight, double height, parser.Node node, ArrayList<String> param) {
 		cur_x = 89;
 		cur_y = 30;
 		canvas = new ResizableCanvas();
@@ -40,18 +42,28 @@ public class GraphGenerator {
 		this.height = height;
 		this.gc = canvas.getGraphicsContext2D();
 		gc.setLineWidth(1);
-		UIUtil.drawStart(gc, cur_x - this.scale_x / 2, cur_y, this.scale_x, this.scale_y);
-		cur_y += this.scale_y; 
 		map = new HashMap<parser.Node, Pos>();
 		graph = new HashMap<parser.Node, HashMap<parser.Node, String>>();
+		this.root = node;
+		UIUtil.drawStart(gc, cur_x - this.scale_x / 2, cur_y, this.scale_x, this.scale_y);
+		cur_y += this.scale_y; 
 		range_x = cur_x;
 		range_y = cur_y;
-		this.root = node;
+		if (param != null) {
+			for (String cur : param) {
+				UIUtil.drawArrow(gc, cur_x, cur_y, cur_x, cur_y + scale_y, true);
+				cur_y += this.scale_y; 
+				UIUtil.drawParameter(gc, cur, cur_x - scale_x / 2, cur_y, scale_x, scale_y);
+				cur_y += this.scale_y; 
+				range_y = cur_y;
+			}
+		}
+		latest_y = cur_y;
 		construct();
 	}
 	
 	private void draw(parser.Node node) {
-		System.out.println(node.getContent());
+//		System.out.println(node.getContent());
 		switch (node.getType()) {
 			case CONDITION:
 				drawConditionStatement(node);
@@ -85,7 +97,7 @@ public class GraphGenerator {
 	
 	private void drawStartToRoot() {
 		Pos cur = map.get(root);
-		UIUtil.drawArrow(gc, 89, 30 + scale_y, cur.x, cur.y, true);
+		UIUtil.drawArrow(gc, 89, latest_y, cur.x, cur.y, true);
 	}
 	
 	public void paint() {

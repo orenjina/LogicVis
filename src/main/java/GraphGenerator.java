@@ -253,7 +253,8 @@ public class GraphGenerator {
 				configurePlainStatement(node);
 				break;
 			default:
-		}
+		}	
+
 	}
 	
 	// configure return statement
@@ -296,11 +297,14 @@ public class GraphGenerator {
 		cur_y = temp_y;
 		
 		// handle false later
-		cur_x = (3.0 / 2) * scale_x + range_x;
-		range_x = cur_x;
-		connect(node, not, "False");
-		if (not == null) System.out.println("null");
-		if (!map.containsKey(not)) configure(not);
+		if (not == null) {
+			System.out.println("null");
+		} else {
+			cur_x = (3.0 / 2) * scale_x + range_x;
+			range_x = cur_x;
+			connect(node, not, "False");
+			if (!map.containsKey(not)) configure(not);
+		}
 	}
 	
 	// add edges to graph

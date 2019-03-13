@@ -8,6 +8,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -34,7 +35,7 @@ public class LogicVisView extends Application {
 	private static int y = 720;
 	private ActionGenerator action;
 	private HashSet<ImageView> images;
-	private parser.Node myNode;
+	private Parser.Node myNode;
 	private ImageView iv2;
 	private Scene zoom;
 	private Stage mainstage;
@@ -94,8 +95,8 @@ public class LogicVisView extends Application {
 				if (input != null) {
 					System.out.println("input received");
 					// parse node
-					parser p = new parser(input);
-					parser.Node node = p.traverseFirst();
+					Parser p = new Parser(input);
+					Parser.Node node = p.traverseFirst();
 					myNode = node;
 					// get execution
 					action = new ActionGenerator(input);

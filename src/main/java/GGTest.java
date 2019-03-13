@@ -28,11 +28,11 @@ public class GGTest extends Application
         		"	}\n" + 
         		"	return 2;\n" + 
         		"}";
-        parser par = new parser(testfile);
+        Parser par = new Parser(testfile);
 //        List<MethodDeclaration> methods = parser.getAllMethods();
 //        methods.forEach(n -> System.out.println("Method Collected: " + n.getName()));
 //        MethodDeclaration m = par.getMethod("recur");
-        parser.Node r = par.traverse("a");
+        Parser.Node r = par.traverse("a");
          
         GraphGenerator gg = new GraphGenerator(400, 200, r, null);
         // Get the graphics context of the canvas

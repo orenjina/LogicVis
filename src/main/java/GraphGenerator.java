@@ -23,24 +23,24 @@ public class GraphGenerator {
 	double scale_y = 36;
 	ResizableCanvas canvas;
 	GraphicsContext gc;
-	HashMap<parser.Node, Pos> map;
-	HashMap<parser.Node, HashMap<parser.Node, String>> graph;
+	HashMap<Parser.Node, Pos> map;
+	HashMap<Parser.Node, HashMap<Parser.Node, String>> graph;
 	double range_x;
 	double range_y;
-	parser.Node root;
+	Parser.Node root;
 	double latest_y;
 	
 	/*
 	 * Default constructing graph generator
 	 */
-	public GraphGenerator(parser.Node node, ArrayList<String> param) {
+	public GraphGenerator(Parser.Node node, ArrayList<String> param) {
 		this(960 * 0.32, 720 * 0.5, node, param);
 	}
 	
 	/*
 	 * Constructing graph generator with a different canvas size
 	 */
-	public GraphGenerator(double weight, double height, parser.Node node, ArrayList<String> param) {
+	public GraphGenerator(double weight, double height, Parser.Node node, ArrayList<String> param) {
 		cur_x = 89;
 		cur_y = 30;
 		canvas = new ResizableCanvas();
@@ -50,8 +50,8 @@ public class GraphGenerator {
 		this.height = height;
 		this.gc = canvas.getGraphicsContext2D();
 		gc.setLineWidth(1);
-		map = new HashMap<parser.Node, Pos>();
-		graph = new HashMap<parser.Node, HashMap<parser.Node, String>>();
+		map = new HashMap<Parser.Node, Pos>();
+		graph = new HashMap<Parser.Node, HashMap<Parser.Node, String>>();
 		this.root = node;
 		UIUtil.drawStart(gc, cur_x - this.scale_x / 2, cur_y, this.scale_x, this.scale_y);
 		cur_y += this.scale_y; 
@@ -73,7 +73,7 @@ public class GraphGenerator {
 	/*
 	 * Actually draw the nodes and edges on canvas
 	 */
-	private void draw(parser.Node node) {
+	private void draw(Parser.Node node) {
 //		System.out.println(node.getContent());
 		switch (node.getType()) {
 			case CONDITION:
@@ -90,20 +90,20 @@ public class GraphGenerator {
 	}
 	
 	// draw return statement
-	private void drawReturnStatement(parser.Node node) {
+	private void drawReturnStatement(Parser.Node node) {
 		// MVP
 		Pos cur = map.get(node);
 		UIUtil.drawRecurse(gc, node.getContent(), cur.x - this.scale_x / 2, cur.y, scale_x, scale_y);
 	}
 	
 	// draw condition statement
-	private void drawConditionStatement(parser.Node node) {
+	private void drawConditionStatement(Parser.Node node) {
 		Pos cur = map.get(node);
 		UIUtil.drawConditional(gc, node.getContent(), cur.x - scale_x / 2, cur.y, scale_x, scale_y);
 	}
 	
 	// draw a normal statement
-	private void drawPlainStatement(parser.Node node) {
+	private void drawPlainStatement(Parser.Node node) {
 		// MVP
 		Pos cur = map.get(node);
 		UIUtil.drawStatement(gc, node.getContent(), cur.x - this.scale_x / 2, cur.y, scale_x, scale_y);
@@ -119,19 +119,19 @@ public class GraphGenerator {
 	public void paint() {
 		drawStartToRoot();
 		
-		for(parser.Node node : map.keySet()) {
+		for(Parser.Node node : map.keySet()) {
 			draw(node);
 		}
 		
-		for(parser.Node node : graph.keySet()) {
-			for (parser.Node dst : graph.get(node).keySet()) {
+		for(Parser.Node node : graph.keySet()) {
+			for (Parser.Node dst : graph.get(node).keySet()) {
 				paintConnect(node, dst, graph.get(node).get(dst));
 			}
 		}
 	}
 	
 	// draw edge
-	private void paintConnect(parser.Node src, parser.Node dst, String statement) {
+	private void paintConnect(Parser.Node src, Parser.Node dst, String statement) {
 		Pos x = map.get(src);
 		Pos y = map.get(dst);
 		
@@ -219,8 +219,8 @@ public class GraphGenerator {
 	}
 	
 	// find the true node among all children
-	private parser.Node getTrue(Map<parser.Node, String> children) {
-		for (parser.Node cur : children.keySet()) {
+	private Parser.Node getTrue(Map<Parser.Node, String> children) {
+		for (Parser.Node cur : children.keySet()) {
 			if (children.get(cur).equals("True")) {
 				return cur;
 			}
@@ -229,8 +229,8 @@ public class GraphGenerator {
 	}
 	
 	// find the false node among all children
-	private parser.Node getFalse(Map<parser.Node, String> children) {
-		for (parser.Node cur : children.keySet()) {
+	private Parser.Node getFalse(Map<Parser.Node, String> children) {
+		for (Parser.Node cur : children.keySet()) {
 			if (children.get(cur).equals("False")) {
 				return cur;
 			}
@@ -239,7 +239,7 @@ public class GraphGenerator {
 	}
 	
 	// configure the whole graph structure
-	public void configure(parser.Node node) {
+	public void configure(Parser.Node node) {
 		System.out.println(node.getContent() + " " + cur_x);
 		expand();
 		switch (node.getType()) {
@@ -257,18 +257,18 @@ public class GraphGenerator {
 	}
 	
 	// configure return statement
-	private void configureReturnStatement(parser.Node node) {
+	private void configureReturnStatement(Parser.Node node) {
 		// TODO Auto-generated method stub
 		configurePlainStatement(node);
 	}
 
 	// configure plain statement
-	private void configurePlainStatement(parser.Node node) {
+	private void configurePlainStatement(Parser.Node node) {
 		// TODO Auto-generated method stub
 		map.put(node, new Pos(cur_x, cur_y));
 		
-		Map<parser.Node, String> children = node.getChildren();
-		for (parser.Node cur : children.keySet()) {
+		Map<Parser.Node, String> children = node.getChildren();
+		for (Parser.Node cur : children.keySet()) {
 			cur_y += 2 * scale_y;
 			range_y = Math.max(cur_y, range_y);
 			connect(node, cur, "");
@@ -277,13 +277,13 @@ public class GraphGenerator {
 	}
 
 	// configure conditional statement
-	private void configureConditionStatement(parser.Node node) {
+	private void configureConditionStatement(Parser.Node node) {
 		// TODO Auto-generated method stub
 		map.put(node, new Pos(cur_x, cur_y));
 		
-		Map<parser.Node, String> children = node.getChildren();
-		parser.Node not = getFalse(children);
-		parser.Node yes = getTrue(children);
+		Map<Parser.Node, String> children = node.getChildren();
+		Parser.Node not = getFalse(children);
+		Parser.Node yes = getTrue(children);
 		double temp_x = cur_x;
 		double temp_y = cur_y;
 		
@@ -304,9 +304,9 @@ public class GraphGenerator {
 	}
 	
 	// add edges to graph
-	private void connect(parser.Node src, parser.Node dst, String statement) {
+	private void connect(Parser.Node src, Parser.Node dst, String statement) {
 		if (!graph.containsKey(src)) {
-			graph.put(src, new HashMap<parser.Node, String>());
+			graph.put(src, new HashMap<Parser.Node, String>());
 		}
 		graph.get(src).put(dst, statement);
 	}

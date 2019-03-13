@@ -25,7 +25,7 @@ enum Type {
  * parser is a class that takes in java methods (recursive or non recursive) and parse them into
  * a tree structure (Node) defined in this file
  */
-public class parser {
+public class Parser {
     // head of the AST
     private CompilationUnit cu;
 
@@ -37,10 +37,10 @@ public class parser {
     private List<Node> containRecurNode;
 
     /**
-     * Constructor
+     * Constructor, parse the given method into an AST
      * @param method the entire user input method in a string
      */
-    public parser(String method) {
+    public Parser(String method) {
         try {
             PrintWriter out = new PrintWriter(fileName, "UTF-8");
             out.println("public class methodFile {");
@@ -61,7 +61,7 @@ public class parser {
      */
     public List<MethodDeclaration> getAllMethods() {
         List<MethodDeclaration> methods = new ArrayList<>();
-        VoidVisitor<List<MethodDeclaration>> methodCollector = new parser.MethodCollector();
+        VoidVisitor<List<MethodDeclaration>> methodCollector = new Parser.MethodCollector();
         methodCollector.visit(cu, methods);
         return methods;
     }
@@ -69,7 +69,8 @@ public class parser {
     /**
      * get the specific method with the given name in AST structure
      * @param name the user input method name as a string
-     * @return MethodDeclaration(root) of the AST
+     * @return a JavaParser MethodDeclaration, which is an AST subtree, null if such method is
+     * not found
      */
     public MethodDeclaration getMethod(String name) {
         List<MethodDeclaration> all = getAllMethods();
@@ -145,12 +146,17 @@ public class parser {
     }
 
     /**
-     * creates a subtree of a NodeList of Statements (processed block statements)
+     * creates a subtree of a NodeList of Statements (processed block statements), containing
+     * nodes corresponding to the given line/blocks of code
      * @param stmts a NodeList of statements
-     * @param endNodes the leave nodes of this subtree
+     * @param endNodes the set for containing leave nodes of this subtree, will be added by this
+     *                 method
      * @return the root node of this subtree
      */
     private Node listStmts(NodeList<Statement> stmts, Set<Node> endNodes) {
+        // this method calls the oneStmtDispatch to process each single statement and then
+        // connect them together from the last one's end nodes to the next one's root node.
+
         Node root = null;
         Set<Node> lastNodes = new HashSet<>();
         for (Statement stmt : stmts) {
@@ -178,9 +184,11 @@ public class parser {
     }
 
     /**
-     * creates a subtree of a JavaParser Statement
+     * creates a subtree of a JavaParser Statement, containing nodes corresponding to the
+     * given line/blocks of code
      * @param cur a JavaParser Statement that will be contained in the subtree returned
-     * @param endNodes the leave nodes of this subtree
+     * @param endNodes the set for containing leave nodes of this subtree, will be added by this
+     *                 method
      * @return the root node of this subtree
      */
     private Node oneStmtDispatch(Statement cur, Set<Node> endNodes) {
@@ -196,10 +204,10 @@ public class parser {
             return next;
         } else if (cur.isForStmt()) {
             ForStmt forst = cur.asForStmt();
-            return forOPerations(forst, endNodes);
+            return forOperations(forst, endNodes);
         } else if (cur.isWhileStmt()) {
             WhileStmt whilest = cur.asWhileStmt();
-            return whileOPerations(whilest, endNodes);
+            return whileOperations(whilest, endNodes);
         } else if (cur.isExpressionStmt()) {
             ExpressionStmt expst = cur.asExpressionStmt();
             return expstmtOperations(expst, endNodes);
@@ -211,9 +219,11 @@ public class parser {
     }
 
     /**
-     * creates a subtree of a JavaParser ExpressionStmt
+     * creates a subtree of a JavaParser ExpressionStmt, containing nodes corresponding to the
+     * given line/blocks of code
      * @param expst a JavaParser ExpressionStmt that will be contained in the subtree returned
-     * @param endNodes the leave nodes of this subtree
+     * @param endNodes the set for containing leave nodes of this subtree, will be added by this
+     *                 method
      * @return the root node of this subtree
      */
     private Node expstmtOperations(ExpressionStmt expst, Set<Node> endNodes) {
@@ -224,9 +234,11 @@ public class parser {
     }
 
     /**
-     * creates a subtree of a JavaParser IfStmt
+     * creates a subtree of a JavaParser IfStmt, containing nodes corresponding to the given
+     * line/blocks of code
      * @param ifst a JavaParser IfStmt that will be contained in the subtree returned
-     * @param endNodes the leave nodes of this subtree
+     * @param endNodes the set for containing leave nodes of this subtree, will be added by this
+     *                 method
      * @return the root node of this subtree
      */
     private Node ifOperations(IfStmt ifst, Set<Node> endNodes) {
@@ -252,7 +264,7 @@ public class parser {
     private Node expOperations(Type t, Expression ex) {
         Node n = new Node(t, ex.toString());
         List<MethodCallExpr> allMethodCall = new ArrayList<>();
-        VoidVisitor<List<MethodCallExpr>> expVisitor = new parser.ExpressionVisitor();
+        VoidVisitor<List<MethodCallExpr>> expVisitor = new Parser.ExpressionVisitor();
         MethodCallExpr expst = new MethodCallExpr(null, getFirstFunctionName()+"wrapper",
                 new NodeList<>(ex));
         expVisitor.visit(expst, allMethodCall);
@@ -268,9 +280,11 @@ public class parser {
     }
 
     /**
-     * creates a subtree of a JavaParser NodeList of Expression
+     * creates a subtree of a JavaParser NodeList of Expression, containing nodes corresponding
+     * to the given line/blocks of code
      * @param exp a JavaParser NodeList of Expression that will be contained in the subtree returned
-     * @param endNodes the leave nodes of this subtree
+     * @param endNodes the set for containing leave nodes of this subtree, will be added by this
+     *                 method
      * @return the root node of this subtree
      */
     private Node listExpOperations(NodeList<Expression> exp, List<Node> endNodes) {
@@ -286,12 +300,19 @@ public class parser {
     }
 
     /**
-     * creates a subtree of a JavaParser ForStmt
+     * creates a subtree of a JavaParser ForStmt, containing nodes corresponding to the given
+     * line/blocks of code
      * @param forst a JavaParser ForStmt that will be contained in the subtree returned
-     * @param endNodes the leave nodes of this subtree
+     * @param endNodes the set for containing leave nodes of this subtree, will be added by this
+     *                 method
      * @return the root node of this subtree
      */
-    private Node forOPerations(ForStmt forst, Set<Node> endNodes) {
+    private Node forOperations(ForStmt forst, Set<Node> endNodes) {
+        // this method will handle the initialization and condition first where initialization
+        // will be treated as a normal expression and condition will be parsed into a condition
+        // node. Then the body will point to the update node, which is connected to the condition
+        // node.
+
         // INITIALIZATION
         NodeList<Expression> init = forst.getInitialization();
         List<Node> lastOne = new ArrayList<>();
@@ -321,12 +342,16 @@ public class parser {
     }
 
     /**
-     * creates a subtree of a JavaParser WhileStmt
+     * creates a subtree of a JavaParser WhileStmt, containing nodes corresponding to the given
+     * line/blocks of code
      * @param whilest a JavaParser WhileStmt that will be contained in the subtree returned
-     * @param endNodes the leave nodes of this subtree
+     * @param endNodes the set for containing leave nodes of this subtree, will be added by this
+     *                 method
      * @return the root node of this subtree
      */
-    private Node whileOPerations(WhileStmt whilest, Set<Node> endNodes) {
+    private Node whileOperations(WhileStmt whilest, Set<Node> endNodes) {
+        // get parsed into a condition node and the rest of the body in nodes
+
         Node cond = expOperations(Type.CONDITION, whilest.getCondition());
         // while operation always ends on the condition
         endNodes.add(cond);
@@ -380,7 +405,7 @@ public class parser {
         private HashMap<Node, String> children;
 
         /**
-         * constructor
+         * constructor, set the type and the content of this node to be the given type and content
          * @param t enum Type, possible values are NONE, CONDITION, and RETURN
          * @param content a string containing the code, which is displayed in the shape in GUI
          */

@@ -1,8 +1,6 @@
-import java.util.Map;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -10,11 +8,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class LogicVisView extends Application {
@@ -88,8 +83,8 @@ public class LogicVisView extends Application {
 						layout.getChildren().remove(outText);
 						layout.getChildren().add(iv);
 					}
-					parser p = new parser(input);
-					parser.Node node = p.traverseFirst();
+					Parser p = new Parser(input);
+					Parser.Node node = p.traverseFirst();
 					gg.draw(node, true);
 					Image image = gg.renderImage();
 					iv.setImage(image);

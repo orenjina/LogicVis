@@ -1,1 +1,14 @@
 /target/
+/.DS_Store
+/.classpath
+/.gitignore
+/.project
+/.travis.yml
+/README.md
+/User Manual.pdf
+/chart.png
+/methodFile.class
+/pom.xml
+/reports/
+/scripts/
+/src/

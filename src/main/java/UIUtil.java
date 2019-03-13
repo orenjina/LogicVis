@@ -33,6 +33,7 @@ public class UIUtil {
 			text_width = text.getLayoutBounds().getWidth() + 2 * TEXT_MARGIN;
 		} while (text_width > scale_x);
 		
+		gc.setFont(new Font("Consolas", 12));
 		gc.strokeText(statement, pos_x + TEXT_MARGIN - text_width / 2 + scale_x / 2, pos_y + scale_y / 2 + TEXT_HEIGHT / 2);
 	}
 	

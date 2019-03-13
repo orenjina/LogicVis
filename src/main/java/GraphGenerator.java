@@ -259,8 +259,7 @@ public class GraphGenerator {
 	
 	// configure return statement
 	private void configureReturnStatement(Parser.Node node) {
-		// TODO Auto-generated method stub
-		configurePlainStatement(node);
+		map.put(node, new Pos(cur_x, cur_y));
 	}
 
 	// configure plain statement

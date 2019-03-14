@@ -9,7 +9,9 @@ Progress this week:
 3. Added test results to the final report (EVAL)
 4. Edited final report according to the feedback given (BOTH)
 5. Re-wrote parts of UI to make the product look better (BOTH)
-6. 
+6. Added features to get parameters and image views (IMPLEM)
+7. Integrated executor with graph (IMPLEM)
+8. Resolved parser integration difficulties (IMPLEM)
 
 Goals for the next week:
 1. Finish all implementation planned (IMPLEM)

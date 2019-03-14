@@ -4,7 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
-public class test {
+public class ExecutorTests {
 	public final static String FIBONACCI = "fibonacci.bsh";
 	public final static String HCF = "hcf.bsh";
 	public final static String NOPARAM = "noParam";

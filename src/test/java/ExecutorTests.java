@@ -4,26 +4,29 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
-public class ExecutorTests {
+public class test {
 	public final static String FIBONACCI = "fibonacci.bsh";
 	public final static String HCF = "hcf.bsh";
 	public final static String NOPARAM = "noParam";
 	public final static String VOID = "voidFunc.txt";
+	public final static String NONRECURSION = "sum.txt";
 	
 	public static void main(String[] args) {
 		//testPreprocessorFib();
-		 testExecutorFib();
+		// testExecutorFib();
 		// testPreprocessorHCF();
 		// testExecutorHCF();
 		// testActionFib();
-		// testActionHCF();
+		 testActionHCF();
 		// testPreprocessorNoParam();
 		// testActionNoParam();
 		// testPreprocessorVoid();
-		 //testActionVoid();
+		// testActionVoid();
+		// testPreProcessorNonRecursion();
+		// testExecutorNonRecursion();
+		// testActionNonRecur();
 	}
 	
-
 	
 	public static void testPreprocessor(String code) {
 		Preprocessor p = new Preprocessor(code);
@@ -36,6 +39,12 @@ public class ExecutorTests {
 			System.out.println("Preprocess failed!");
 		}	
 	}
+	
+	public static void testPreProcessorNonRecursion() {
+		String code = readFile(NONRECURSION);
+		testPreprocessor(code);
+	}
+	
 	
 	public static void testPreprocessorVoid() {
 		String code = readFile(VOID);
@@ -103,10 +112,22 @@ public class ExecutorTests {
 		action.next();
 		action.next();
 		action.next();
+		action.next();
+		System.out.println(action.isDone());
 		action.printCurrentState();
 	}
 	
-
+	public static void testExecutorNonRecursion() {
+		String code = readFile(NONRECURSION);
+		String[] args = new String[2];
+		args[0] = Integer.toString(6);
+		args[1] = Integer.toString(7);
+		Preprocessor p = new Preprocessor(code);
+		if (p.preprocess()) {
+			Executor exe = new Executor(p, args);
+			exe.printList();
+		}
+	}
 	
 	public static void testExecutorHCF() {
 		String code = readFile(HCF);
@@ -131,6 +152,17 @@ public class ExecutorTests {
 		}
 	}
 	
+	public static void testActionNonRecur() {
+		String code  = readFile(NONRECURSION);
+		String[] args = new String[2];
+		args[0] = Integer.toString(10);
+		args[1] = Integer.toString(12);
+		ActionGenerator action = new ActionGenerator(code);
+		action.execute(args);
+		action.next();
+		action.next();
+		action.printCurrentState();
+	}
 	
 	/*
 	 * @Param: String filePath, a path to the file that has Java function code

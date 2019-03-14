@@ -99,15 +99,15 @@ public class ActionGenerator {
 				removeCurrentState();
 			}
 		} else {
-			if (!isDone()) {
+			if (currentState.size() > 1) {
 				removeCurrentState();
 			}
 		}
 	}
 	
-	// Check if there is no more depth can be explored in the input recursion function
-	private boolean isDone() {
-		return currentState.size() == 0;
+	// Return whether the function can still be "nexted"
+	public boolean isDone() {
+		return list.next == null && currentState.size() == 1;
 	}
 	
 	// Helper function that remove a node in the currentState and update the returned value in the

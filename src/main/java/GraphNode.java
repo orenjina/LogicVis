@@ -40,16 +40,25 @@ public class GraphNode {
 	
 	// Get the return value from this step, null if there is no reture value
 	public String getReturnValue() {
+		if (node == null) {
+			return null;
+		}
 		return node.returnValue;
 	}
 	
 	// Get the parameter value from this call in an ArrayList of String
 	public ArrayList<String> getParameters() {
+		if (node == null) {
+			return null;
+		}
 		return node.getParams();
 	}
 	
 	// Get the depth of this call
 	public int getDepth() {
+		if (node == null) {
+			return -1;
+		}
 		return node.getDepth();
 	}
 	

@@ -5,15 +5,21 @@
 See user manual here:
 [User Manual](/User%20Manual.pdf)
 
-For initial results, do any of the following:
-1. To see the results from our script, run the following command in the terminal at the root directory: ./scripts/initial_results.sh
+<h2>Building from Source</h2>
 
-The program will first build and test, listing out its test results.
+Required software: Maven, JDK 11 (JDK 11 is only required to build from source. Java 8 suffices if only trying to run the jar executable.)
 
-Then, you should be able to see string representation print out of a tree in the terminal (See [testCode](/src/main/resources/testCode.java) for the original code of the tree). 
+Run “mvn clean install” from the terminal in the project repository.
+To launch the tool after building it, run “mvn exec:java”.
 
-In addition, there will be a pop-up that represents the basic representation of the UI we plan to make. Users can put in any standalone method and acquire a control flow graph as an output when they press the "Let's do it" button.
+<h2>Restrictions</h2>
 
-2. Directly check the scripts in the scripts folder and run each command independently.
+This section notes a few input restrictions of the program. If these restrictions are violated, the program behaves unpredictably:
+- Do not use any of these variable names in our input method:    ROOT, curDEPTH, depTH, callFromLAST, returnVALUE   
+- Do not put any uncompilable code in our input method
 
-3. *Be aware that in the input box, you need to add "{ }" around the code in "if statement". For example, instead of writing "if (a) return 0;", write "if (a) { return 0; }". We are currently working on solving this problem.
+<h2>Bug List</h2>
+
+This list presents known bugs that have not been fixed yet:
+- If we have multiple nodes that are on different levels pointing to the same nodes as a child, the arrows will overlap with one another. We have yet to figure out a way to solve it. This may require going through the entire tree once before starting to draw out individual nodes, so they can be located properly.
+- We also have a problem dealing the the case when there is statement right after if statement “if (a) return b;” which is a valid java code. We can solve this by adding { } around “return b”. So “if (a) {return b;}”

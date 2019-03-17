@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javafx.application.Application;
@@ -9,6 +11,8 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
@@ -33,12 +37,14 @@ public class LogicVisView extends Application {
 	private static int y = 720;
 	private ActionGenerator action;
 	private HashSet<ImageView> images;
+	private HashSet<Label> labels;
 	private Parser.Node myNode;
 	private ImageView iv2;
 	private Scene zoom;
 	private Stage mainstage;
 	private ScrollPane sp;
 	private VBox vb;
+	private Parser p;
 	
 	@Override
     public void start(Stage stage) {
@@ -93,9 +99,12 @@ public class LogicVisView extends Application {
 				// TODO Auto-generated method stub
 				String input = inputText.getText();
 				if (input != null) {
+					// fix the error that the code cannot be executed if it does not has an extra
+					// blank line
+					input += "\n";
 					System.out.println("input received");
 					// parse node
-					Parser p = new Parser(input);
+					p = new Parser(input);
 					Parser.Node node = p.traverseFirst();
 					myNode = node;
 					// get execution
@@ -122,7 +131,7 @@ public class LogicVisView extends Application {
 						if (layout.getChildren().contains(outText)) {
 							layout.getChildren().remove(outText);
 						}
-						GraphNode tempnode = new GraphNode(new ParamList(0),0);
+						GraphNode tempnode = new GraphNode(new ParamList(0, 0),0);
 						ArrayList<GraphNode> temparr = new ArrayList<GraphNode>();
 						temparr.add(tempnode);
 						display(layout, temparr);
@@ -142,7 +151,22 @@ public class LogicVisView extends Application {
 			@Override
 			public void handle(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				if (!layout.getChildren().contains(outText)) {
+				System.out.println("action is " + (action == null ? "null" : "not null"));
+				if (action == null) {
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Warning");
+					alert.setHeaderText("Warning");
+					alert.setContentText("Please press \"Lets do it!\" first");
+
+					alert.showAndWait();
+				} else if (action.isDone()) {
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Warning");
+					alert.setHeaderText("Warning");
+					alert.setContentText("No more steps...");
+
+					alert.showAndWait();
+				} else if (!layout.getChildren().contains(outText)) {
 					// dialog value is set
 					action.next();
 					ArrayList<GraphNode> currentNodes = action.getCurrentState();
@@ -303,35 +327,62 @@ public class LogicVisView extends Application {
     }
     
     // draw or redraw the whole graph
-    private void redraw(Pane layout, ArrayList<ImageView> views) {
+    private void redraw(Pane layout, ArrayList<ImageView> views, ArrayList<Label> returns) {
     		if (images != null) {
         		for (ImageView iv : images) {
         			layout.getChildren().remove(iv);
         		}
     		}
     		
+    		if (labels != null) {
+    			for (Label l : labels) {
+    				layout.getChildren().remove(l);
+    			}
+    		}
+    		
     		double cur_x = x * 0.58;
     		double cur_y = y * 0.1;
     		double scale_x = x * 0.32;
     		
+    		labels = new HashSet<Label>();
     		images = new HashSet<ImageView>();
     		
-    		for (ImageView view : views) {
+    		for (int i = 0; i < views.size(); i++) {
+    			ImageView view = views.get(i);
+    			Label l = returns.get(i);
+    			
     			AnchorPane.setLeftAnchor(view, cur_x);
     			AnchorPane.setTopAnchor(view, cur_y);
+    			AnchorPane.setLeftAnchor(l, cur_x);
+    			AnchorPane.setTopAnchor(l, y * 0.65);
     			cur_x += scale_x + 30;
     			images.add(view);
-    			layout.getChildren().add(view);
+    			labels.add(l);
+    			layout.getChildren().addAll(view, l);
     		}
+//    		
+//    		for (ImageView view : views) {
+//    			AnchorPane.setLeftAnchor(view, cur_x);
+//    			AnchorPane.setTopAnchor(view, cur_y);
+//    			cur_x += scale_x + 30;
+//    			images.add(view);
+//    			layout.getChildren().add(view);
+//    		}
     }
     
     // draw images and configure imageviews, and then dislay them
     private void display(Pane layout, ArrayList<GraphNode> currentNodes) {
 		ArrayList<ImageView> views = new ArrayList<ImageView>();
+		ArrayList<Label> returns = new ArrayList<Label>();
 		for (GraphNode graphnode : currentNodes) {
 			GraphGenerator gg = new GraphGenerator(myNode, graphnode.getParameters());
-			gg.paint();
-			
+			List<Parser.Node> list = p.getRecurNodes();
+			if (list.size() == 0 || graphnode.highlightNode < 0) {
+				gg.paint(null);
+			} else {
+				gg.paint(list.get(graphnode.highlightNode));
+			}
+//			System.out.println(graphnode.getReturnValue());
 			// create image view
 			Image image = gg.renderImage();
 			ImageView temp = new ImageView();
@@ -341,6 +392,13 @@ public class LogicVisView extends Application {
 			temp.setFitHeight(y * 0.5);
 			temp.setFitWidth(x * 0.32);
 			views.add(temp);
+			
+			// create Label
+			Label l = new Label();
+			l.setPrefSize(x * 0.1, y * 0.05);
+			l.setText(graphnode.getReturnValue() == null ? "" : "This returns: " + graphnode.getReturnValue());
+			
+			returns.add(l);
 			
 			// if clicked then zoom
 			temp.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
@@ -359,6 +417,6 @@ public class LogicVisView extends Application {
 				}
 			});
 		}
-		redraw(layout, views);
+		redraw(layout, views, returns);
     }
 }

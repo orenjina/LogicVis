@@ -1,10 +1,18 @@
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 // a util class
 public class UIUtil {
 	public static void drawStart(GraphicsContext gc, double pos_x, double pos_y, double scale_x, double scale_y) {
 		gc.strokeOval(pos_x, pos_y, scale_x, scale_y);
 		gc.strokeText("Start", pos_x + 0.25 * scale_x, pos_y + 0.75 * scale_y, 0.5 * scale_x);
+	}
+	
+	// paint color
+	public static void paintColor(GraphicsContext gc, double pos_x, double pos_y, double scale_x, double scale_y) {
+		gc.setFill(Color.LIGHTPINK);
+		gc.fillRect(pos_x, pos_y, scale_x, scale_y);
+		gc.setFill(Color.BLACK);
 	}
 	
 	// a diamond

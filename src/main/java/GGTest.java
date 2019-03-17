@@ -92,10 +92,10 @@ public class GGTest extends Application
 		return 5;
 	}
 	
-	private void recur(int num) {
+	private int recur(int num) {
 		if (num > 0) {
-			recur(num - 1);
+			return recur(num - 1);
 		}
-		
+		return num;
 	}
 }

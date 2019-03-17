@@ -116,9 +116,13 @@ public class GraphGenerator {
 	}
 	
 	// the method to call to draw the whole graph on canvas
-	public void paint() {
+	public void paint(Parser.Node called) {
 		drawStartToRoot();
-		
+		if (called != null) {
+			Pos p = map.get(called);
+			UIUtil.paintColor(gc, p.x - scale_x / 2, p.y, scale_x, scale_y);
+		}
+
 		for(Parser.Node node : map.keySet()) {
 			draw(node);
 		}
@@ -137,7 +141,12 @@ public class GraphGenerator {
 		
 		if (x.x == y.x) {
 			if (x.y < y.y) {
-				UIUtil.drawArrowDown(gc, statement, x.x, x.y + scale_y, y.y - x.y - scale_y);
+				if (y.y - 2 * scale_y > x.y) {
+					UIUtil.drawLine(gc, statement, x.x + scale_x / 2, x.y + scale_y / 2, x.x + scale_x / 2 + 40, x.y + scale_y / 2);
+					UIUtil.drawLineArrowHorizontal(gc, statement, x.x + scale_x / 2 + 40, x.y + scale_y / 2, y.x + scale_x / 2, y.y + scale_y / 2);
+				} else {
+					UIUtil.drawArrowDown(gc, statement, x.x, x.y + scale_y, y.y - x.y - scale_y);
+				}
 			} else {
 				UIUtil.drawArrowUp(gc, statement, y.x - scale_x / 2, y.y + scale_y / 2, x.x - scale_x / 2, x.y + scale_y / 2);
 			}
@@ -193,20 +202,15 @@ public class GraphGenerator {
 	
 	// enpand the canvas when needed
 	private void expand() {
-
-		if (cur_y + 2 * scale_y > height) {
-			// expand vertically
+		if (cur_y + 2 * scale_y > height || cur_x + 2 * scale_x > weight) {
+			// expand
 			System.out.println("expand");
-			canvas.setHeight(height * 2);
-			height *= 2;
+			height *= 1.5;
+			canvas.setHeight(height);
 			System.out.println("height = " + height);
-		}
-		
-		if (cur_x + 2 * scale_x > weight) {
-			// expand horizontally
 			System.out.println("expand");
-			canvas.setWidth(weight * 2);
-			weight *= 2;
+			weight *= 1.5;
+			canvas.setWidth(weight);
 			System.out.println("weight = " + weight);
 		}
 	}

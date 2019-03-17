@@ -12,6 +12,8 @@ Required software: Maven, JDK 11 (JDK 11 is only required to build from source. 
 Run “mvn clean install” from the terminal in the project repository.
 To launch the tool after building it, run “mvn exec:java”.
 
+See the User Manual for more details.
+
 <h2>Restrictions</h2>
 
 This section notes a few input restrictions of the program. If these restrictions are violated, the program behaves unpredictably:

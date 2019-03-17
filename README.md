@@ -20,7 +20,7 @@ This section notes a few input restrictions of the program. If these restriction
 - Do not use any of these variable names in our input method:    ROOT, curDEPTH, depTH, callFromLAST, returnVALUE   
 - Do not put any uncompilable code in our input method
 
-<h2>Bug List</h2>
+<h2>Known Bugs</h2>
 
 This list presents known bugs that have not been fixed yet:
 - If we have multiple nodes that are on different levels pointing to the same nodes as a child, the arrows will overlap with one another. We have yet to figure out a way to solve it. This may require going through the entire tree once before starting to draw out individual nodes, so they can be located properly.

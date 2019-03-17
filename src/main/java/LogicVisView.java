@@ -3,10 +3,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Stack;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -28,10 +28,8 @@ import javafx.scene.layout.AnchorPane;
 
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 
 public class LogicVisView extends Application {
 	
@@ -44,8 +42,9 @@ public class LogicVisView extends Application {
 	private ImageView iv2;
 	private Scene zoom;
 	private Stage mainstage;
+	private ScrollPane sp;
+	private VBox vb;
 	private Parser p;
-	
 	
 	@Override
     public void start(Stage stage) {
@@ -56,18 +55,15 @@ public class LogicVisView extends Application {
 		stage.setTitle("LogicVis");
 		AnchorPane layout = new AnchorPane();
 		AnchorPane picLayout = new AnchorPane();
-		ScrollPane sp = new ScrollPane();
+		sp = new ScrollPane();
 		sp.setPrefViewportHeight(y);
 		sp.setPrefViewportWidth(x);
-		sp.setFitToWidth(true);
-		VBox vb = new VBox();
+		vb = new VBox();
 		vb.getChildren().add(layout);
 		sp.setContent(vb);
 		
 		// configure zoomed view
 		iv2 = new ImageView();
-		iv2.setFitHeight(y);
-		iv2.setFitWidth(x);
 		AnchorPane.setLeftAnchor(iv2, 0.0);
 		AnchorPane.setTopAnchor(iv2, 0.0);
 		picLayout.getChildren().add(iv2);
@@ -81,18 +77,15 @@ public class LogicVisView extends Application {
 //		valueLabel.setText("Value Input:");
 		
 		Label inputLabel = new Label();
-		inputLabel.setPrefSize(x * 0.1, y * 0.05);
 		inputLabel.setText("Code Input:");
 		
 		// configuring TextField
 		TextArea inputText = new TextArea();
-		inputText.setPrefSize(x * 0.32, y * 0.5);
 		
 //		TextField valueText = new TextField();
 //		valueText.setPrefSize(x * 0.1, y * 0.05);
 		
 		TextField outText = new TextField();
-		outText.setPrefSize(x * 0.32, y * 0.5);
 		outText.setEditable(false);
 		outText.setText("Graph");
 		
@@ -151,7 +144,6 @@ public class LogicVisView extends Application {
 		
 		// configure the next button
 		Button next = new Button();
-		next.setPrefSize(x * 0.1, y * 0.05);
 		next.setText("NEXT");
 		
 		next.setOnAction(new EventHandler<ActionEvent>() {
@@ -184,7 +176,6 @@ public class LogicVisView extends Application {
 		});
 		
 		// configure zoom scene
-		
 		iv2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 
 		     @Override
@@ -194,30 +185,27 @@ public class LogicVisView extends Application {
 		     }
 		});
 		
+		// configure resizing window
+		stage.setMinWidth(x);
+		stage.setMinHeight(y);
 		
-		button.setPrefSize(x * 0.1, y * 0.05);
+		ChangeListener<Number> stageSizeListener = (observable, oldValue, newValue) -> {
+			recalculateBounds();
+			configureLayout(button, next, inputText, inputLabel, outText);
+			if (action != null) {
+				display(layout, action.getCurrentState());
+			}
+		};
+
+		stage.widthProperty().addListener(stageSizeListener);
+		stage.heightProperty().addListener(stageSizeListener);
 		
-		// configuring anchorpane layout
-		
-		// set aspect ratio
-		// button
-		AnchorPane.setLeftAnchor(button, x * 0.45);
-		AnchorPane.setTopAnchor(button, y * 0.7);
-		
-		AnchorPane.setLeftAnchor(next, x * 0.45);
-		AnchorPane.setTopAnchor(next, y * 0.8);
-		
-		// inputText
-		AnchorPane.setLeftAnchor(inputText, x * 0.08);
-		AnchorPane.setTopAnchor(inputText, y * 0.1);
-		
-		// inputLabel
-		AnchorPane.setLeftAnchor(inputLabel, x * 0.08);
-		AnchorPane.setTopAnchor(inputLabel, y * 0.05);
-		
-		// outputText
-		AnchorPane.setLeftAnchor(outText, x * 0.58);
-		AnchorPane.setTopAnchor(outText, y * 0.1);
+		// configure scrolling buttons
+		sp.hvalueProperty().addListener((obs, oldVal, newVal) -> {
+			moveButtons(button, next);
+		});
+
+		configureLayout(button, next, inputText, inputLabel, outText);
 		
 		// adding button to the pane
 		layout.getChildren().addAll(button, inputText, inputLabel, outText, next);
@@ -228,6 +216,54 @@ public class LogicVisView extends Application {
 		// show scene
 		stage.show();
     }
+	
+	private void moveButtons(Button button, Button next) {
+		// Value between 0 and 1
+		double h = sp.getHvalue();
+		double w = vb.getWidth();
+		
+		// buttons
+		AnchorPane.setLeftAnchor(button, x * 0.45 + (w - x) * h);
+		AnchorPane.setTopAnchor(button, y * 0.7);
+
+		AnchorPane.setLeftAnchor(next, x * 0.45 + (w - x) * h);
+		AnchorPane.setTopAnchor(next, y * 0.8);
+	}
+	
+	// Recalculates x and y based on the current width and height
+	private void recalculateBounds() {
+		int w = (int) mainstage.getWidth();
+		int h = (int) mainstage.getHeight();
+		x = Math.min(h * 4 / 3, w);
+		y = Math.min(w * 3 / 4, h);
+	}
+	
+	// Configures the layout (position + size) of all components on the scene
+	private void configureLayout(Button button, Button next, TextArea inputText, Label inputLabel, TextField outText) {
+		// configuring anchorpane layout
+
+		// buttons
+		button.setPrefSize(x * 0.1, y * 0.05);
+		next.setPrefSize(x * 0.1, y * 0.05);
+		moveButtons(button, next);
+		
+		// inputText
+		inputText.setPrefSize(x * 0.32, y * 0.5);
+		AnchorPane.setLeftAnchor(inputText, x * 0.08);
+		AnchorPane.setTopAnchor(inputText, y * 0.1);
+		
+		// inputLabel
+		inputLabel.setPrefSize(x * 0.1, y * 0.05);
+		AnchorPane.setLeftAnchor(inputLabel, x * 0.08);
+		AnchorPane.setTopAnchor(inputLabel, y * 0.05);
+		
+		// outputText
+		outText.setPrefSize(x * 0.32, y * 0.5);
+		AnchorPane.setLeftAnchor(outText, x * 0.58);
+		AnchorPane.setTopAnchor(outText, y * 0.1);
+		
+
+	}
 
     public static void main(String[] args) {
         launch();
@@ -367,12 +403,18 @@ public class LogicVisView extends Application {
 			// if clicked then zoom
 			temp.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 
-			     @Override
-			     public void handle(MouseEvent event) {
-			         System.out.println("Graph pressed ");
-			         iv2.setImage(temp.getImage());
-			         mainstage.setScene(zoom);
-			     }
+				@Override
+				public void handle(MouseEvent event) {
+					double w = mainstage.getWidth();
+					double h = mainstage.getHeight();
+					System.out.println("Graph pressed ");
+					iv2.setImage(temp.getImage());
+					iv2.setFitHeight(h);
+					iv2.setFitWidth(h * 4 / 3 * 0.64);
+					mainstage.setScene(zoom);
+					mainstage.setWidth(w);
+					mainstage.setHeight(h);
+				}
 			});
 		}
 		redraw(layout, views, returns);

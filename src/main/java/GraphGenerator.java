@@ -141,7 +141,12 @@ public class GraphGenerator {
 		
 		if (x.x == y.x) {
 			if (x.y < y.y) {
-				UIUtil.drawArrowDown(gc, statement, x.x, x.y + scale_y, y.y - x.y - scale_y);
+				if (y.y - 2 * scale_y > x.y) {
+					UIUtil.drawLine(gc, statement, x.x + scale_x / 2, x.y + scale_y / 2, x.x + scale_x / 2 + 40, x.y + scale_y / 2);
+					UIUtil.drawLineArrowHorizontal(gc, statement, x.x + scale_x / 2 + 40, x.y + scale_y / 2, y.x + scale_x / 2, y.y + scale_y / 2);
+				} else {
+					UIUtil.drawArrowDown(gc, statement, x.x, x.y + scale_y, y.y - x.y - scale_y);
+				}
 			} else {
 				UIUtil.drawArrowUp(gc, statement, y.x - scale_x / 2, y.y + scale_y / 2, x.x - scale_x / 2, x.y + scale_y / 2);
 			}

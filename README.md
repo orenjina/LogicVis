@@ -9,8 +9,8 @@ See user manual here:
 
 Required software: Maven, JDK 11 (JDK 11 is only required to build from source. Java 8 suffices if only trying to run the jar executable.)
 
-Run “mvn clean install” from the terminal in the project repository.
-To launch the tool after building it, run “mvn exec:java”.
+Run `mvn clean install` from the terminal in the project repository.
+To launch the tool after building it, run `mvn exec:java`.
 
 See the User Manual for more details.
 

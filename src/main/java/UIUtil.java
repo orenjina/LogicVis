@@ -1,11 +1,41 @@
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.scene.paint.Color;
 
 // a util class
 public class UIUtil {
+	private static final double TEXT_MARGIN = 15;
+	private static final double TEXT_HEIGHT = 8;
+	
 	public static void drawStart(GraphicsContext gc, double pos_x, double pos_y, double scale_x, double scale_y) {
 		gc.strokeOval(pos_x, pos_y, scale_x, scale_y);
-		gc.strokeText("Start", pos_x + 0.25 * scale_x, pos_y + 0.75 * scale_y, 0.5 * scale_x);
+		drawText(gc, "Start", pos_x, pos_y, scale_x, scale_y);
+	}
+
+	/**
+	 * Draws text centered at (pos_x, pos_y), and returns the required width of its text box, in pixels.
+	 * @param gc - the GraphicsContext to draw on
+	 * @param statement - the String to draw
+	 * @param pos_x - x-coordinate to center statement around
+	 * @param pos_y - y-coordinate to center statement around
+	 * @return the minimum required width for a text box that contains this statement, in pixels.
+	 */
+	private static void drawText(GraphicsContext gc, String statement, double pos_x, double pos_y, double scale_x, double scale_y) {
+		// find width
+		double text_width = 0;
+		int cur_length = statement.length();
+		do {
+			statement = statement.substring(0, cur_length);
+			cur_length--;
+			Text text = new Text(statement);
+			text.setFont(new Font("Consolas", 12));
+			text.applyCss();
+			text_width = text.getLayoutBounds().getWidth() + 2 * TEXT_MARGIN;
+		} while (text_width > scale_x);
+		
+		gc.setFont(new Font("Consolas", 12));
+		gc.strokeText(statement, pos_x + TEXT_MARGIN - text_width / 2 + scale_x / 2, pos_y + scale_y / 2 + TEXT_HEIGHT / 2);
 	}
 	
 	// paint color
@@ -22,13 +52,13 @@ public class UIUtil {
 		}, new double[] {
 				pos_y + 0.5 * scale_y, pos_y, pos_y + 0.5 * scale_y, pos_y + scale_y
 		}, 4);
-		gc.strokeText(statement, pos_x + 0.25 * scale_x, pos_y + 0.75 * scale_y, 0.5 * scale_x);
+		drawText(gc, statement, pos_x, pos_y, scale_x, scale_y);
 	}
 	
 	// a rectangle
 	public static void drawStatement(GraphicsContext gc, String statement, double pos_x, double pos_y, double scale_x, double scale_y) {
 		gc.strokeRect(pos_x, pos_y, scale_x, scale_y);
-		gc.strokeText(statement, pos_x + 0.25 * scale_x, pos_y + 0.75 * scale_y, 0.5 * scale_x);
+		drawText(gc, statement, pos_x, pos_y, scale_x, scale_y);
 	}
 	
 	// an arrow with no statement

@@ -92,9 +92,9 @@ public class ActionGenerator {
 		GraphNode last = currentState.get(currentState.size() - 1);
 		if (next != null) {
 			if (next.getDepth() > last.getDepth()) {
-				last.currentChildren += 1;
-				currentState.add(new GraphNode(next, last.currentChildren));
+				currentState.add(new GraphNode(next, -1));
 				list = list.next;
+				last.highlightNode = next.getCallFromLast();
 			} else {
 				removeCurrentState();
 			}
@@ -114,7 +114,8 @@ public class ActionGenerator {
 	// previous node
 	private void removeCurrentState() {
 		GraphNode remove = currentState.remove(currentState.size() - 1);
-		currentState.get(currentState.size() - 1).replaceFunctionCall(remove.getReturnValue());
+		GraphNode current = currentState.get(currentState.size() - 1);
+		current.replaceFunctionCall(remove.getReturnValue(), current.highlightNode);
 	}
 	
 	// Return currentState

@@ -47,10 +47,10 @@ return returnVALUE;
 
  */
 public class Preprocessor {
-	public String code = null;		// The original code
-	public String modifiedCode = null;		// The modified code after processing
-	public String functionName = null;		// The name of this function call
-	public String returnType = null;
+	public String code;		// The original code
+	public String modifiedCode;		// The modified code after processing
+	public String functionName;		// The name of this function call
+	public String returnType;
 	public String[] parameterTypes;		// The types of all parameters
 	public String[] parameterNames;		// The names of all parameters
 	
@@ -122,11 +122,11 @@ public class Preprocessor {
 			return false;
 		}
 		// Inject code necessary for executor
-		String injected = "\n root.next = new ParamList(depTH); \n root = root.next; \n";
+		String injected = "\n ROOT.next = new ParamList(depTH, callFromLAST); \n ROOT = ROOT.next; \n";
 		for (int i = 0; i < parameterNames.length; i++) {
-			injected += " root.addParam(\"" + this.parameterNames[i] +"\", " + this.parameterNames[i] +"); \n";
+			injected += " ROOT.addParam(\"" + this.parameterNames[i] +"\", " + this.parameterNames[i] +"); \n";
 		}
-		injected += "ParamList curDEPTH = root;";
+		injected += "ParamList curDEPTH = ROOT;\n";
 		sb.append(codeWithDepth.substring(0, start + 1));
 		sb.append(injected);
 		sb.append(codeWithDepth.substring(start + 1));
@@ -151,7 +151,9 @@ public class Preprocessor {
 		i++;
 		sb.append(code.substring(0, i));
 		sb.append("int depTH, ");
+		sb.append("int callFromLAST, ");
 		// Add "depTH + 1" to all the recursive call
+		int recurNum = 0;
 		while(code.indexOf(name, i) != -1) {
 			int j = code.indexOf(name, i);
 			j += name.length();
@@ -163,6 +165,8 @@ public class Preprocessor {
 			} else {
 				sb.append(code.substring(i, j + 1));
 				sb.append("depTH + 1, ");
+				sb.append(recurNum + ", ");
+				recurNum++;
 			}
 			i = j + 1;
 		}

@@ -16,26 +16,27 @@ public class GraphNode {
 	// A ParamList node that stores the parameters and return value of one function call
 	private ParamList node;
 	
-	// Indicates which recursive function call from previous function called this current function.
+	// Indicates which recursive function call from current function is calling next function call.
 	// In the example recur(n) {return recur(n-1) + recur(n-2)}; connectedArrow == 0 means previous 
 	// function call recur(n-1) called this depth, 1 means previous recur(n-2) called this depth
-	public int connectedArrow;
-	// Stores the number of function call has been processed
-	public int currentChildren;
+	public int highlightNode;
+
 	
 	// Constructs this GraphNode with a paramlistNode and an integer that shows which function
 	// call it is connected to in the previous one
-	public GraphNode(ParamList node, int connectedArrow) {
-		this.connectedArrow = connectedArrow;
+	public GraphNode(ParamList node, int highlightNode) {
+		this.highlightNode = highlightNode;
 		functionCallReplace = new ArrayList<String>();
 		this.node = node;
-		currentChildren = 0;
 	}
 	
 	// add a String to the functionCallReplace that indicates which function call
 	// is replaced by what value. For example: recur(n - 1) replaced by 3
-	public void replaceFunctionCall(String value) {
-		functionCallReplace.add(value);
+	public void replaceFunctionCall(String value, int index) {
+		while (functionCallReplace.size() <= index) {
+			functionCallReplace.add(null);
+		}
+		functionCallReplace.set(index, value);
 	}
 	
 	// Get the return value from this step, null if there is no reture value
@@ -73,6 +74,6 @@ public class GraphNode {
 		for(int i = 0; i < functionCallReplace.size(); i++) {
 			System.out.print(" " + functionCallReplace.get(i));
 		}
-		System.out.println("Sequence linked to last node: " + connectedArrow);
+		System.out.println("The Node connected to next graph: " + highlightNode);
 	}
 }

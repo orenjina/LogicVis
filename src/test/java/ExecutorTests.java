@@ -4,20 +4,21 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
-public class ExecutorTests {
+public class test {
 	public final static String FIBONACCI = "fibonacci.bsh";
 	public final static String HCF = "hcf.bsh";
 	public final static String NOPARAM = "noParam";
 	public final static String VOID = "voidFunc.txt";
 	public final static String NONRECURSION = "sum.txt";
+	public final static String IFCASE = "ifCase.txt";
 	
 	public static void main(String[] args) {
-		//testPreprocessorFib();
+		// testPreprocessorFib();
 		// testExecutorFib();
 		// testPreprocessorHCF();
 		// testExecutorHCF();
-		// testActionFib();
-		 testActionHCF();
+		 testActionFib();
+		// testActionHCF();
 		// testPreprocessorNoParam();
 		// testActionNoParam();
 		// testPreprocessorVoid();
@@ -25,6 +26,8 @@ public class ExecutorTests {
 		// testPreProcessorNonRecursion();
 		// testExecutorNonRecursion();
 		// testActionNonRecur();
+		// testPreProcessorIfCase();
+		// testActionIfCase();
 	}
 	
 	
@@ -38,6 +41,11 @@ public class ExecutorTests {
 		} else {
 			System.out.println("Preprocess failed!");
 		}	
+	}
+	
+	public static void testPreProcessorIfCase() {
+		String code = readFile(IFCASE);
+		testPreprocessor(code);
 	}
 	
 	public static void testPreProcessorNonRecursion() {
@@ -79,6 +87,18 @@ public class ExecutorTests {
 		action.printCurrentState();
 	}
 	
+	public static void testActionIfCase() {
+		String code = readFile(IFCASE);
+		String[] args = new String[1];
+		args[0] = "3";
+		ActionGenerator action = new ActionGenerator(code);
+		action.execute(args);
+		action.next();
+		action.next();
+		action.next();
+		action.printCurrentState();
+	}
+	
 	public static void testActionNoParam() {
 		String code = readFile(NOPARAM);
 		String[] args = new String[1];
@@ -94,9 +114,6 @@ public class ExecutorTests {
 		args[0] = Integer.toString(3);
 		ActionGenerator action = new ActionGenerator(code);
 		action.execute(args);
-		action.next();
-		action.next();
-		action.next();
 		action.next();
 		action.next();
 		action.printCurrentState();

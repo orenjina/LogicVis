@@ -10,17 +10,15 @@ import java.util.LinkedList;
  */
 public class Executor {
 	// A line of code that initialize the ParamList
-	public final static String BUILDLIST = "ParamList root = new ParamList(-1)";
+	public final static String BUILDLIST = "ParamList ROOT = new ParamList(-1, -1)";
 	// Set a pointer so that we can iterate through the paramlist
-	public final static String BUILDPOINTER = "ParamList begin = root;";
+	public final static String BUILDPOINTER = "ParamList begin = ROOT;";
 	
 	// The paramlist that stores the parameter values and depth in a String format "int i <-- i's value"
 	// for each recursive call.
 	public ParamList list = null;
 	// The starting parameter values, set by users.
 	String args[];
-	
-	public LinkedList<GraphNode> currentState;
 	
 	// Pass a Java code function as a String and the initial parameter values set by user.
 	public Executor(Preprocessor p, String args[]) {
@@ -39,7 +37,7 @@ public class Executor {
 		try{
 			Interpreter interpreter = new Interpreter();
 			StringBuilder functionCall = new StringBuilder();
-			functionCall.append(p.functionName + "(0");
+			functionCall.append(p.functionName + "(0, -1");
 			for (int i = 0; i < args.length; i++) {
 				functionCall.append(", " + args[i]);
 			}
@@ -64,11 +62,13 @@ public class Executor {
 	public void printList() {
 		ParamList temp = list;
 		if (temp != null) {
+			System.out.println("Last call: " + temp.callFromLast);
 			System.out.println("Depth: " + temp.getDepth());
 			System.out.println("Return Value: " + temp.returnValue);
 			printParams(temp);
 			while (temp.hasNext()) {
 				temp = temp.next;
+				System.out.println("Last call: " + temp.callFromLast);
 				System.out.println("Depth: " + temp.getDepth());
 				System.out.println("Return Value: " + temp.returnValue);
 				printParams(temp);

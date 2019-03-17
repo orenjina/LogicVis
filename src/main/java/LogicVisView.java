@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Stack;
@@ -10,21 +11,25 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
@@ -34,10 +39,12 @@ public class LogicVisView extends Application {
 	private static int y = 720;
 	private ActionGenerator action;
 	private HashSet<ImageView> images;
-	private parser.Node myNode;
+	private HashSet<Label> labels;
+	private Parser.Node myNode;
 	private ImageView iv2;
 	private Scene zoom;
 	private Stage mainstage;
+	private Parser p;
 	
 	
 	@Override
@@ -49,16 +56,24 @@ public class LogicVisView extends Application {
 		stage.setTitle("LogicVis");
 		AnchorPane layout = new AnchorPane();
 		AnchorPane picLayout = new AnchorPane();
+		ScrollPane sp = new ScrollPane();
+		sp.setPrefViewportHeight(y);
+		sp.setPrefViewportWidth(x);
+		sp.setFitToWidth(true);
+		VBox vb = new VBox();
+		vb.getChildren().add(layout);
+		sp.setContent(vb);
+		
+		// configure zoomed view
 		iv2 = new ImageView();
 		iv2.setFitHeight(y);
 		iv2.setFitWidth(x);
 		AnchorPane.setLeftAnchor(iv2, 0.0);
 		AnchorPane.setTopAnchor(iv2, 0.0);
 		picLayout.getChildren().add(iv2);
-		Dispatcher D = new Dispatcher();
 		
 		zoom = new Scene(picLayout, x, y);
-		Scene scene = new Scene(layout, x, y);
+		Scene scene = new Scene(sp, x, y);
 		
 		// configure label
 //		Label valueLabel = new Label();
@@ -81,13 +96,6 @@ public class LogicVisView extends Application {
 		outText.setEditable(false);
 		outText.setText("Graph");
 		
-		// configuring image
-		ImageView iv = new ImageView();
-		iv.resize(x * 0.32, y * 0.5);
-		iv.setFitHeight(y * 0.5);
-		iv.setFitWidth(x * 0.32);
-		iv.setPreserveRatio(false);
-		
 		// configuring button
 		Button button = new Button();
 		button.setText("Let's Do It!");
@@ -96,32 +104,23 @@ public class LogicVisView extends Application {
 			@Override
 			public void handle(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-//				String input = inputText.getText();
-//				String filename = valueText.getText();
-//				if (input != null && filename != null) {
-//					if (layout.getChildren().contains(outText)) {
-//						layout.getChildren().remove(outText);
-//						layout.getChildren().add(iv);
-//					}
-//					parser p = new parser(input);
-//					parser.Node node = p.traverseFirst();
-//					GraphGenerator gg = new GraphGenerator(node);
-//					gg.paint();
-//					Image image = gg.renderImage();
-//					iv.setImage(image);
-//					iv2.setImage(image);
-//				}
 				String input = inputText.getText();
 				if (input != null) {
+					// fix the error that the code cannot be executed if it does not has an extra
+					// blank line
+					input += "\n";
+					System.out.println("input received");
 					// parse node
-					parser p = new parser(input);
-					parser.Node node = p.traverseFirst();
+					p = new Parser(input);
+					Parser.Node node = p.traverseFirst();
 					myNode = node;
 					// get execution
 					action = new ActionGenerator(input);
-					String[] types = action.getParameterTypes();
-					String[] names = action.getParameterNames();
-					if (types.length != 0) {
+
+					if (action.getParameterNum() != 0) { // there are parameters, get them
+						
+						String[] types = action.getParameterTypes();
+						String[] names = action.getParameterNames();
 						// there are params, configure dialog
 						Dialog<String[]> dialog = configureDialog(types, names);
 						Optional<String[]> result = dialog.showAndWait();
@@ -135,12 +134,22 @@ public class LogicVisView extends Application {
 								layout.getChildren().remove(outText);
 							}
 						});
+					} else { // no parameter, just display
+						if (layout.getChildren().contains(outText)) {
+							layout.getChildren().remove(outText);
+						}
+						GraphNode tempnode = new GraphNode(new ParamList(0, 0),0);
+						ArrayList<GraphNode> temparr = new ArrayList<GraphNode>();
+						temparr.add(tempnode);
+						display(layout, temparr);
+						System.out.println("no param");
 					}
 				}
 			}
 			
 		});
 		
+		// configure the next button
 		Button next = new Button();
 		next.setPrefSize(x * 0.1, y * 0.05);
 		next.setText("NEXT");
@@ -150,7 +159,22 @@ public class LogicVisView extends Application {
 			@Override
 			public void handle(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				if (!layout.getChildren().contains(outText)) {
+				System.out.println("action is " + (action == null ? "null" : "not null"));
+				if (action == null) {
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Warning");
+					alert.setHeaderText("Warning");
+					alert.setContentText("Please press \"Lets do it!\" first");
+
+					alert.showAndWait();
+				} else if (action.isDone()) {
+					Alert alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Warning");
+					alert.setHeaderText("Warning");
+					alert.setContentText("No more steps...");
+
+					alert.showAndWait();
+				} else if (!layout.getChildren().contains(outText)) {
 					// dialog value is set
 					action.next();
 					ArrayList<GraphNode> currentNodes = action.getCurrentState();
@@ -160,15 +184,6 @@ public class LogicVisView extends Application {
 		});
 		
 		// configure zoom scene
-
-		iv.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-
-		     @Override
-		     public void handle(MouseEvent event) {
-		         System.out.println("Graph pressed ");
-		         stage.setScene(zoom);
-		     }
-		});
 		
 		iv2.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 
@@ -204,10 +219,6 @@ public class LogicVisView extends Application {
 		AnchorPane.setLeftAnchor(outText, x * 0.58);
 		AnchorPane.setTopAnchor(outText, y * 0.1);
 		
-		// image
-		AnchorPane.setLeftAnchor(iv, x * 0.58);
-		AnchorPane.setTopAnchor(iv, y * 0.1);
-		
 		// adding button to the pane
 		layout.getChildren().addAll(button, inputText, inputLabel, outText, next);
 		
@@ -220,44 +231,6 @@ public class LogicVisView extends Application {
 
     public static void main(String[] args) {
         launch();
-    }
-    
-    
-    // dispatches image view
-    private class Dispatcher {
-		public double cur_x;
-		public double cur_y;
-		public double scale_x = x * 0.32;
-		public Stack<ImageView> s;
-		
-		public Dispatcher() {
-			cur_x = x * 0.58;
-			cur_y = y * 0.1;
-			s = new Stack<ImageView>();
-		}
-		
-		public ImageView getNextImageView() {
-			ImageView iv = new ImageView();
-			iv.setFitHeight(y * 0.5);
-			iv.setFitWidth(x * 0.32);
-			cur_x += scale_x + 30;
-			AnchorPane.setLeftAnchor(iv, cur_x);
-			AnchorPane.setTopAnchor(iv, cur_y);
-			s.push(iv);
-			return iv;
-		}
-		
-		public ImageView peek() {
-			return s.peek();
-		}
-		
-		public ImageView pop() {
-			return s.pop();
-		}
-		
-		public boolean isEmpty() {
-			return s.isEmpty();
-		}
     }
     
     // returns a pop up window
@@ -317,34 +290,63 @@ public class LogicVisView extends Application {
 	    	return dialog;
     }
     
-    private void redraw(Pane layout, ArrayList<ImageView> views) {
+    // draw or redraw the whole graph
+    private void redraw(Pane layout, ArrayList<ImageView> views, ArrayList<Label> returns) {
     		if (images != null) {
         		for (ImageView iv : images) {
         			layout.getChildren().remove(iv);
         		}
     		}
     		
+    		if (labels != null) {
+    			for (Label l : labels) {
+    				layout.getChildren().remove(l);
+    			}
+    		}
+    		
     		double cur_x = x * 0.58;
     		double cur_y = y * 0.1;
     		double scale_x = x * 0.32;
     		
+    		labels = new HashSet<Label>();
     		images = new HashSet<ImageView>();
     		
-    		for (ImageView view : views) {
+    		for (int i = 0; i < views.size(); i++) {
+    			ImageView view = views.get(i);
+    			Label l = returns.get(i);
+    			
     			AnchorPane.setLeftAnchor(view, cur_x);
     			AnchorPane.setTopAnchor(view, cur_y);
+    			AnchorPane.setLeftAnchor(l, cur_x);
+    			AnchorPane.setTopAnchor(l, y * 0.65);
     			cur_x += scale_x + 30;
     			images.add(view);
-    			layout.getChildren().add(view);
+    			labels.add(l);
+    			layout.getChildren().addAll(view, l);
     		}
+//    		
+//    		for (ImageView view : views) {
+//    			AnchorPane.setLeftAnchor(view, cur_x);
+//    			AnchorPane.setTopAnchor(view, cur_y);
+//    			cur_x += scale_x + 30;
+//    			images.add(view);
+//    			layout.getChildren().add(view);
+//    		}
     }
     
+    // draw images and configure imageviews, and then dislay them
     private void display(Pane layout, ArrayList<GraphNode> currentNodes) {
 		ArrayList<ImageView> views = new ArrayList<ImageView>();
+		ArrayList<Label> returns = new ArrayList<Label>();
 		for (GraphNode graphnode : currentNodes) {
 			GraphGenerator gg = new GraphGenerator(myNode, graphnode.getParameters());
-			gg.paint();
-			
+			List<Parser.Node> list = p.getRecurNodes();
+			if (list.size() == 0 || graphnode.highlightNode < 0) {
+				gg.paint(null);
+			} else {
+				gg.paint(list.get(graphnode.highlightNode));
+			}
+//			System.out.println(graphnode.getReturnValue());
 			// create image view
 			Image image = gg.renderImage();
 			ImageView temp = new ImageView();
@@ -355,6 +357,14 @@ public class LogicVisView extends Application {
 			temp.setFitWidth(x * 0.32);
 			views.add(temp);
 			
+			// create Label
+			Label l = new Label();
+			l.setPrefSize(x * 0.1, y * 0.05);
+			l.setText(graphnode.getReturnValue() == null ? "" : "This returns: " + graphnode.getReturnValue());
+			
+			returns.add(l);
+			
+			// if clicked then zoom
 			temp.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 
 			     @Override
@@ -365,6 +375,6 @@ public class LogicVisView extends Application {
 			     }
 			});
 		}
-		redraw(layout, views);
+		redraw(layout, views, returns);
     }
 }

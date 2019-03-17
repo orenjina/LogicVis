@@ -1,6 +1,7 @@
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.paint.Color;
 
 // a util class
 public class UIUtil {
@@ -35,6 +36,13 @@ public class UIUtil {
 		
 		gc.setFont(new Font("Consolas", 12));
 		gc.strokeText(statement, pos_x + TEXT_MARGIN - text_width / 2 + scale_x / 2, pos_y + scale_y / 2 + TEXT_HEIGHT / 2);
+	}
+	
+	// paint color
+	public static void paintColor(GraphicsContext gc, double pos_x, double pos_y, double scale_x, double scale_y) {
+		gc.setFill(Color.LIGHTPINK);
+		gc.fillRect(pos_x, pos_y, scale_x, scale_y);
+		gc.setFill(Color.BLACK);
 	}
 	
 	// a diamond

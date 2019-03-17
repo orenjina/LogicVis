@@ -7,13 +7,19 @@ public class ParamList{
 	private int depth;			// depth indicates the depth of this node in recursion
 	public ParamList next;			// Next node
 	public String returnValue;
+	public int callFromLast;
 	/*
 	 *Constructs a Paramlist and stores the depth information
 	 */
-	public ParamList(int depth) {
+	public ParamList(int depth, int callFromLast) {
 		this.params = new ArrayList<String>();
 		this.depth = depth;
+		this.callFromLast = callFromLast;
 		this.next = null;
+	}
+	
+	public int getCallFromLast() {
+		return callFromLast;
 	}
 	
 	/*
@@ -21,7 +27,7 @@ public class ParamList{
 	 * Add a toString value into params in a format "String n <-- value"
 	 */
 	public void addParam(String name, Object value) {
-		params.add(value.getClass().toString() + " " + name + " <-- " + value.toString());
+		params.add(name + " <-- " + value.toString());
 	}
 	
 	/*

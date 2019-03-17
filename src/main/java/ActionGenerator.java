@@ -30,6 +30,15 @@ public class ActionGenerator {
 		}
 	}
 	
+	// Return the number of parameters in this function. 
+	public int getParameterNum(){
+		if (this.preprocessor.parameterTypes.length == 1 && this.preprocessor.parameterTypes[0] == null) {
+			return 0;
+		} else {
+			return this.preprocessor.parameterTypes.length;
+		}
+	}
+	
 	// Return an array of parameter types of this method
 	public String[] getParameterTypes(){
 		return this.preprocessor.parameterTypes;
@@ -79,33 +88,36 @@ public class ActionGenerator {
 	
 	// Every time, the user calls next, update the current State
 	public void next() {
+		System.out.println(errorMessage);
 		ParamList next = list.next;
 		GraphNode last = currentState.get(currentState.size() - 1);
 		if (next != null) {
 			if (next.getDepth() > last.getDepth()) {
-				last.currentChildren += 1;
-				currentState.add(new GraphNode(next, last.currentChildren));
+				currentState.add(new GraphNode(next, -1));
 				list = list.next;
+				last.highlightNode = next.getCallFromLast();
 			} else {
 				removeCurrentState();
 			}
 		} else {
-			if (!isDone()) {
+			if (currentState.size() > 1) {
 				removeCurrentState();
 			}
 		}
 	}
 	
-	// Check if there is no more depth can be explored in the input recursion function
-	private boolean isDone() {
-		return currentState.size() == 0;
+	// Return whether the function can still be "nexted"
+	public boolean isDone() {
+		if (list == null || currentState == null)  return false;
+		return list.next == null && currentState.size() == 1;
 	}
 	
 	// Helper function that remove a node in the currentState and update the returned value in the
 	// previous node
 	private void removeCurrentState() {
 		GraphNode remove = currentState.remove(currentState.size() - 1);
-		currentState.get(currentState.size() - 1).replaceFunctionCall(remove.getReturnValue());
+		GraphNode current = currentState.get(currentState.size() - 1);
+		current.replaceFunctionCall(remove.getReturnValue(), current.highlightNode);
 	}
 	
 	// Return currentState

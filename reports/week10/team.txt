@@ -1,0 +1,27 @@
+Goals last week:
+1. Perform tests with complete UI and functionality (EVAL)
+2. Add the test results to the final report when we get them (EVAL)
+3. Finish the prototype of the final product (IMPLEM)
+
+Progress this week:
+1. Performed user testing with better UI and functionality, but did not include expansion for recursive cases due to technical difficulties (EVAL)
+2. Code Reviewed Executor and Parser (EVAL)
+3. Added test results to the final report (EVAL)
+4. Edited final report according to the feedback given (BOTH)
+5. Re-wrote parts of UI to make the product look better (BOTH)
+6. Added features to get parameters and image views (IMPLEM)
+7. Integrated executor with graph (IMPLEM)
+8. Resolved parser integration difficulties (IMPLEM)
+
+Goals for the next week:
+1. Finish all implementation planned (IMPLEM)
+2. Fix all bugs that impair functionality in usual cases (IMPLEM)
+3. Revise final report according to feedback (EVAL)
+4. Prepare for final presentation (BOTH)
+
+TA meeting agenda:
+1. Discuss the status on the technical progress
+2. Discuss the repository status and expectations
+3. Discuss whether anything is missing from the project
+4. Discuss whether another user evaluation is necessary
+5. Discuss the plan for next week

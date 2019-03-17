@@ -11,7 +11,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.WritableImage;
 
-
+/*
+ * Takes in a tree of parsed code and the parameters passed in and generates a flow chart
+ */
 public class GraphGenerator {
 	double cur_x;
 	double cur_y;
@@ -21,18 +23,24 @@ public class GraphGenerator {
 	double scale_y = 36;
 	ResizableCanvas canvas;
 	GraphicsContext gc;
-	HashMap<parser.Node, Pos> map;
-	HashMap<parser.Node, HashMap<parser.Node, String>> graph;
+	HashMap<Parser.Node, Pos> map;
+	HashMap<Parser.Node, HashMap<Parser.Node, String>> graph;
 	double range_x;
 	double range_y;
-	parser.Node root;
+	Parser.Node root;
 	double latest_y;
 	
-	public GraphGenerator(parser.Node node, ArrayList<String> param) {
+	/*
+	 * Default constructing graph generator
+	 */
+	public GraphGenerator(Parser.Node node, ArrayList<String> param) {
 		this(960 * 0.32, 720 * 0.5, node, param);
 	}
 	
-	public GraphGenerator(double weight, double height, parser.Node node, ArrayList<String> param) {
+	/*
+	 * Constructing graph generator with a different canvas size
+	 */
+	public GraphGenerator(double weight, double height, Parser.Node node, ArrayList<String> param) {
 		cur_x = 89;
 		cur_y = 30;
 		canvas = new ResizableCanvas();
@@ -42,8 +50,8 @@ public class GraphGenerator {
 		this.height = height;
 		this.gc = canvas.getGraphicsContext2D();
 		gc.setLineWidth(1);
-		map = new HashMap<parser.Node, Pos>();
-		graph = new HashMap<parser.Node, HashMap<parser.Node, String>>();
+		map = new HashMap<Parser.Node, Pos>();
+		graph = new HashMap<Parser.Node, HashMap<Parser.Node, String>>();
 		this.root = node;
 		UIUtil.drawStart(gc, cur_x - this.scale_x / 2, cur_y, this.scale_x, this.scale_y);
 		cur_y += this.scale_y; 
@@ -62,7 +70,10 @@ public class GraphGenerator {
 		construct();
 	}
 	
-	private void draw(parser.Node node) {
+	/*
+	 * Actually draw the nodes and edges on canvas
+	 */
+	private void draw(Parser.Node node) {
 //		System.out.println(node.getContent());
 		switch (node.getType()) {
 			case CONDITION:
@@ -78,49 +89,64 @@ public class GraphGenerator {
 		}
 	}
 	
-	private void drawReturnStatement(parser.Node node) {
+	// draw return statement
+	private void drawReturnStatement(Parser.Node node) {
 		// MVP
 		Pos cur = map.get(node);
 		UIUtil.drawRecurse(gc, node.getContent(), cur.x - this.scale_x / 2, cur.y, scale_x, scale_y);
 	}
 	
-	private void drawConditionStatement(parser.Node node) {
+	// draw condition statement
+	private void drawConditionStatement(Parser.Node node) {
 		Pos cur = map.get(node);
 		UIUtil.drawConditional(gc, node.getContent(), cur.x - scale_x / 2, cur.y, scale_x, scale_y);
 	}
 	
-	private void drawPlainStatement(parser.Node node) {
+	// draw a normal statement
+	private void drawPlainStatement(Parser.Node node) {
 		// MVP
 		Pos cur = map.get(node);
 		UIUtil.drawStatement(gc, node.getContent(), cur.x - this.scale_x / 2, cur.y, scale_x, scale_y);
 	}
 	
+	// link start to the first node
 	private void drawStartToRoot() {
 		Pos cur = map.get(root);
 		UIUtil.drawArrow(gc, 89, latest_y, cur.x, cur.y, true);
 	}
 	
-	public void paint() {
+	// the method to call to draw the whole graph on canvas
+	public void paint(Parser.Node called) {
 		drawStartToRoot();
-		
-		for(parser.Node node : map.keySet()) {
+		if (called != null) {
+			Pos p = map.get(called);
+			UIUtil.paintColor(gc, p.x - scale_x / 2, p.y, scale_x, scale_y);
+		}
+
+		for(Parser.Node node : map.keySet()) {
 			draw(node);
 		}
 		
-		for(parser.Node node : graph.keySet()) {
-			for (parser.Node dst : graph.get(node).keySet()) {
+		for(Parser.Node node : graph.keySet()) {
+			for (Parser.Node dst : graph.get(node).keySet()) {
 				paintConnect(node, dst, graph.get(node).get(dst));
 			}
 		}
 	}
 	
-	private void paintConnect(parser.Node src, parser.Node dst, String statement) {
+	// draw edge
+	private void paintConnect(Parser.Node src, Parser.Node dst, String statement) {
 		Pos x = map.get(src);
 		Pos y = map.get(dst);
 		
 		if (x.x == y.x) {
 			if (x.y < y.y) {
-				UIUtil.drawArrowDown(gc, statement, x.x, x.y + scale_y, y.y - x.y - scale_y);
+				if (y.y - 2 * scale_y > x.y) {
+					UIUtil.drawLine(gc, statement, x.x + scale_x / 2, x.y + scale_y / 2, x.x + scale_x / 2 + 40, x.y + scale_y / 2);
+					UIUtil.drawLineArrowHorizontal(gc, statement, x.x + scale_x / 2 + 40, x.y + scale_y / 2, y.x + scale_x / 2, y.y + scale_y / 2);
+				} else {
+					UIUtil.drawArrowDown(gc, statement, x.x, x.y + scale_y, y.y - x.y - scale_y);
+				}
 			} else {
 				UIUtil.drawArrowUp(gc, statement, y.x - scale_x / 2, y.y + scale_y / 2, x.x - scale_x / 2, x.y + scale_y / 2);
 			}
@@ -140,10 +166,10 @@ public class GraphGenerator {
 				System.out.println(2);
 				UIUtil.drawLineArrowHorizontal(gc, statement, x.x, x.y + scale_y, y.x + scale_x / 2 , y.y + scale_y / 2);
 			}
-			
 		}
 	}
 	
+	// render the canvas in to an image
 	public WritableImage renderImage() {
 		WritableImage image = canvas.snapshot(null, null);
 		
@@ -153,6 +179,7 @@ public class GraphGenerator {
 		return image;
 	}
 	
+	// save the image to chart.png
 	private void save(WritableImage image) {
 //		// save file
 		File file = new File("chart.png");
@@ -165,6 +192,7 @@ public class GraphGenerator {
 	    }
 	}
 	
+	// making the canvas resizable
 	private class ResizableCanvas extends Canvas {
 		@Override
 		public boolean isResizable() {
@@ -172,33 +200,31 @@ public class GraphGenerator {
 		}
 	}
 	
+	// enpand the canvas when needed
 	private void expand() {
-
-		if (cur_y + 2 * scale_y > height) {
-			// expand vertically
+		if (cur_y + 2 * scale_y > height || cur_x + 2 * scale_x > weight) {
+			// expand
 			System.out.println("expand");
-			canvas.setHeight(height * 2);
-			height *= 2;
+			height *= 1.5;
+			canvas.setHeight(height);
 			System.out.println("height = " + height);
-		}
-		
-		if (cur_x + 2 * scale_x > weight) {
-			// expand horizontally
 			System.out.println("expand");
-			canvas.setWidth(weight * 2);
-			weight *= 2;
+			weight *= 1.5;
+			canvas.setWidth(weight);
 			System.out.println("weight = " + weight);
 		}
 	}
 	
+	// construct the whole graph structure
 	private void construct() {
 		cur_y += scale_y;
 		range_y = cur_y;
 		configure(root);
 	}
 	
-	private parser.Node getTrue(Map<parser.Node, String> children) {
-		for (parser.Node cur : children.keySet()) {
+	// find the true node among all children
+	private Parser.Node getTrue(Map<Parser.Node, String> children) {
+		for (Parser.Node cur : children.keySet()) {
 			if (children.get(cur).equals("True")) {
 				return cur;
 			}
@@ -206,8 +232,9 @@ public class GraphGenerator {
 		return null;
 	}
 	
-	private parser.Node getFalse(Map<parser.Node, String> children) {
-		for (parser.Node cur : children.keySet()) {
+	// find the false node among all children
+	private Parser.Node getFalse(Map<Parser.Node, String> children) {
+		for (Parser.Node cur : children.keySet()) {
 			if (children.get(cur).equals("False")) {
 				return cur;
 			}
@@ -215,7 +242,8 @@ public class GraphGenerator {
 		return null;
 	}
 	
-	public void configure(parser.Node node) {
+	// configure the whole graph structure
+	public void configure(Parser.Node node) {
 		System.out.println(node.getContent() + " " + cur_x);
 		expand();
 		switch (node.getType()) {
@@ -229,20 +257,23 @@ public class GraphGenerator {
 				configurePlainStatement(node);
 				break;
 			default:
-		}
+		}	
+
 	}
 	
-	private void configureReturnStatement(parser.Node node) {
+	// configure return statement
+	private void configureReturnStatement(Parser.Node node) {
 		// TODO Auto-generated method stub
 		configurePlainStatement(node);
 	}
 
-	private void configurePlainStatement(parser.Node node) {
+	// configure plain statement
+	private void configurePlainStatement(Parser.Node node) {
 		// TODO Auto-generated method stub
 		map.put(node, new Pos(cur_x, cur_y));
 		
-		Map<parser.Node, String> children = node.getChildren();
-		for (parser.Node cur : children.keySet()) {
+		Map<Parser.Node, String> children = node.getChildren();
+		for (Parser.Node cur : children.keySet()) {
 			cur_y += 2 * scale_y;
 			range_y = Math.max(cur_y, range_y);
 			connect(node, cur, "");
@@ -250,13 +281,14 @@ public class GraphGenerator {
 		}
 	}
 
-	private void configureConditionStatement(parser.Node node) {
+	// configure conditional statement
+	private void configureConditionStatement(Parser.Node node) {
 		// TODO Auto-generated method stub
 		map.put(node, new Pos(cur_x, cur_y));
 		
-		Map<parser.Node, String> children = node.getChildren();
-		parser.Node not = getFalse(children);
-		parser.Node yes = getTrue(children);
+		Map<Parser.Node, String> children = node.getChildren();
+		Parser.Node not = getFalse(children);
+		Parser.Node yes = getTrue(children);
 		double temp_x = cur_x;
 		double temp_y = cur_y;
 		
@@ -269,20 +301,25 @@ public class GraphGenerator {
 		cur_y = temp_y;
 		
 		// handle false later
-		cur_x = (3.0 / 2) * scale_x + range_x;
-		range_x = cur_x;
-		connect(node, not, "False");
-		if (not == null) System.out.println("null");
-		if (!map.containsKey(not)) configure(not);
+		if (not == null) {
+			System.out.println("null");
+		} else {
+			cur_x = (3.0 / 2) * scale_x + range_x;
+			range_x = cur_x;
+			connect(node, not, "False");
+			if (!map.containsKey(not)) configure(not);
+		}
 	}
 	
-	private void connect(parser.Node src, parser.Node dst, String statement) {
+	// add edges to graph
+	private void connect(Parser.Node src, Parser.Node dst, String statement) {
 		if (!graph.containsKey(src)) {
-			graph.put(src, new HashMap<parser.Node, String>());
+			graph.put(src, new HashMap<Parser.Node, String>());
 		}
 		graph.get(src).put(dst, statement);
 	}
 
+	// an object that stores the position of a node
 	private class Pos {
 		public double x;
 		public double y;

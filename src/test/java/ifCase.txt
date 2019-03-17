@@ -1,0 +1,10 @@
+int ifCase(int n) {
+	if (n == 0) {
+		return 0;
+	}
+	if (n % 2 == 0) {
+		return ifCase(n - 1) + 1;
+	} else {
+		return ifCase(n - 1) + 1;
+	}
+}

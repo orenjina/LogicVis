@@ -116,9 +116,13 @@ public class GraphGenerator {
 	}
 	
 	// the method to call to draw the whole graph on canvas
-	public void paint() {
+	public void paint(Parser.Node called) {
 		drawStartToRoot();
-		
+		if (called != null) {
+			Pos p = map.get(called);
+			UIUtil.paintColor(gc, p.x - scale_x / 2, p.y, scale_x, scale_y);
+		}
+
 		for(Parser.Node node : map.keySet()) {
 			draw(node);
 		}

@@ -88,6 +88,7 @@ public class ActionGenerator {
 	
 	// Every time, the user calls next, update the current State
 	public void next() {
+		System.out.println(errorMessage);
 		ParamList next = list.next;
 		GraphNode last = currentState.get(currentState.size() - 1);
 		if (next != null) {
@@ -107,6 +108,7 @@ public class ActionGenerator {
 	
 	// Return whether the function can still be "nexted"
 	public boolean isDone() {
+		if (list == null || currentState == null)  return false;
 		return list.next == null && currentState.size() == 1;
 	}
 	

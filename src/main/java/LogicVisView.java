@@ -39,6 +39,7 @@ public class LogicVisView extends Application {
 	private static int y = 720;
 	private ActionGenerator action;
 	private HashSet<ImageView> images;
+	private HashSet<Label> labels;
 	private Parser.Node myNode;
 	private ImageView iv2;
 	private Scene zoom;
@@ -105,6 +106,9 @@ public class LogicVisView extends Application {
 				// TODO Auto-generated method stub
 				String input = inputText.getText();
 				if (input != null) {
+					// fix the error that the code cannot be executed if it does not has an extra
+					// blank line
+					input += "\n";
 					System.out.println("input received");
 					// parse node
 					p = new Parser(input);
@@ -287,31 +291,53 @@ public class LogicVisView extends Application {
     }
     
     // draw or redraw the whole graph
-    private void redraw(Pane layout, ArrayList<ImageView> views) {
+    private void redraw(Pane layout, ArrayList<ImageView> views, ArrayList<Label> returns) {
     		if (images != null) {
         		for (ImageView iv : images) {
         			layout.getChildren().remove(iv);
         		}
     		}
     		
+    		if (labels != null) {
+    			for (Label l : labels) {
+    				layout.getChildren().remove(l);
+    			}
+    		}
+    		
     		double cur_x = x * 0.58;
     		double cur_y = y * 0.1;
     		double scale_x = x * 0.32;
     		
+    		labels = new HashSet<Label>();
     		images = new HashSet<ImageView>();
     		
-    		for (ImageView view : views) {
+    		for (int i = 0; i < views.size(); i++) {
+    			ImageView view = views.get(i);
+    			Label l = returns.get(i);
+    			
     			AnchorPane.setLeftAnchor(view, cur_x);
     			AnchorPane.setTopAnchor(view, cur_y);
+    			AnchorPane.setLeftAnchor(l, cur_x);
+    			AnchorPane.setTopAnchor(l, y * 0.65);
     			cur_x += scale_x + 30;
     			images.add(view);
-    			layout.getChildren().add(view);
+    			labels.add(l);
+    			layout.getChildren().addAll(view, l);
     		}
+//    		
+//    		for (ImageView view : views) {
+//    			AnchorPane.setLeftAnchor(view, cur_x);
+//    			AnchorPane.setTopAnchor(view, cur_y);
+//    			cur_x += scale_x + 30;
+//    			images.add(view);
+//    			layout.getChildren().add(view);
+//    		}
     }
     
     // draw images and configure imageviews, and then dislay them
     private void display(Pane layout, ArrayList<GraphNode> currentNodes) {
 		ArrayList<ImageView> views = new ArrayList<ImageView>();
+		ArrayList<Label> returns = new ArrayList<Label>();
 		for (GraphNode graphnode : currentNodes) {
 			GraphGenerator gg = new GraphGenerator(myNode, graphnode.getParameters());
 			List<Parser.Node> list = p.getRecurNodes();
@@ -331,6 +357,13 @@ public class LogicVisView extends Application {
 			temp.setFitWidth(x * 0.32);
 			views.add(temp);
 			
+			// create Label
+			Label l = new Label();
+			l.setPrefSize(x * 0.1, y * 0.05);
+			l.setText(graphnode.getReturnValue() == null ? "" : "This returns: " + graphnode.getReturnValue());
+			
+			returns.add(l);
+			
 			// if clicked then zoom
 			temp.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
 
@@ -342,6 +375,6 @@ public class LogicVisView extends Application {
 			     }
 			});
 		}
-		redraw(layout, views);
+		redraw(layout, views, returns);
     }
 }

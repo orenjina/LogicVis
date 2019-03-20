@@ -103,6 +103,12 @@ public class LogicVisView extends Application {
 					// blank line
 					input += "\n";
 					System.out.println("input received");
+					
+					// back up previous
+					Parser temp_p = p;
+					Parser.Node temp_node = myNode;
+					ActionGenerator temp_action = action;
+					
 					// parse node
 					p = new Parser(input);
 					Parser.Node node = p.traverseFirst();
@@ -121,12 +127,24 @@ public class LogicVisView extends Application {
 						// dialog value is set
 						result.ifPresent(value -> {
 							action.execute(result.get());
-							ArrayList<GraphNode> currentNodes = action.getCurrentState();
-							display(layout, currentNodes);
-							if (layout.getChildren().contains(outText)) {
-								layout.getChildren().remove(outText);
+							if (action.errorMessage == null) {
+								ArrayList<GraphNode> currentNodes = action.getCurrentState();
+								display(layout, currentNodes);
+								if (layout.getChildren().contains(outText)) {
+									layout.getChildren().remove(outText);
+								}
+							} else {
+								showAlert("Warning", "Execution Failed", "Please check your code...");
 							}
 						});
+						
+						// if cancelled, go back
+						if (!result.isPresent()) {
+							p = temp_p;
+							myNode = temp_node;
+							action = temp_action;
+						}
+						
 					} else { // no parameter, just display
 						if (layout.getChildren().contains(outText)) {
 							layout.getChildren().remove(outText);
@@ -153,19 +171,21 @@ public class LogicVisView extends Application {
 				// TODO Auto-generated method stub
 				System.out.println("action is " + (action == null ? "null" : "not null"));
 				if (action == null) {
-					Alert alert = new Alert(AlertType.INFORMATION);
-					alert.setTitle("Warning");
-					alert.setHeaderText("Warning");
-					alert.setContentText("Please press \"Lets do it!\" first");
-
-					alert.showAndWait();
+//					Alert alert = new Alert(AlertType.INFORMATION);
+//					alert.setTitle("Warning");
+//					alert.setHeaderText("Warning");
+//					alert.setContentText("Please press \"Lets do it!\" first");
+//
+//					alert.showAndWait();
+					showAlert("Warning", "Warning", "Please press \"Lets do it!\" first");
 				} else if (action.isDone()) {
-					Alert alert = new Alert(AlertType.INFORMATION);
-					alert.setTitle("Warning");
-					alert.setHeaderText("Warning");
-					alert.setContentText("No more steps...");
-
-					alert.showAndWait();
+//					Alert alert = new Alert(AlertType.INFORMATION);
+//					alert.setTitle("Warning");
+//					alert.setHeaderText("Warning");
+//					alert.setContentText("No more steps...");
+//
+//					alert.showAndWait();
+					showAlert("Warning", "Warning", "No more steps...");
 				} else if (!layout.getChildren().contains(outText)) {
 					// dialog value is set
 					action.next();
@@ -216,6 +236,16 @@ public class LogicVisView extends Application {
 		// show scene
 		stage.show();
     }
+	
+	// pop up a dialog with title, header, and content
+	private void showAlert(String title, String header, String content) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle(title);
+		alert.setHeaderText(header);
+		alert.setContentText(content);
+
+		alert.showAndWait();
+	}
 	
 	private void moveButtons(Button button, Button next) {
 		// Value between 0 and 1

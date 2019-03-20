@@ -425,7 +425,7 @@ public class LogicVisView extends Application {
 			
 			// create Label
 			Label l = new Label();
-			l.setPrefSize(x * 0.1, y * 0.05);
+			l.setPrefSize(x * 0.32, y * 0.05);
 			l.setText(graphnode.getReturnValue() == null ? "" : "This returns: " + graphnode.getReturnValue());
 			
 			returns.add(l);

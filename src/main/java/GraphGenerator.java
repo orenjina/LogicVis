@@ -19,7 +19,7 @@ public class GraphGenerator {
 	double cur_y;
 	double weight;
 	double height;
-	double scale_x = 80;
+	double scale_x = 120;
 	double scale_y = 36;
 	ResizableCanvas canvas;
 	GraphicsContext gc;
@@ -205,11 +205,11 @@ public class GraphGenerator {
 		if (cur_y + 2 * scale_y > height || cur_x + 2 * scale_x > weight) {
 			// expand
 			System.out.println("expand");
-			height *= 1.5;
+			height *= 1.2;
 			canvas.setHeight(height);
 			System.out.println("height = " + height);
 			System.out.println("expand");
-			weight *= 1.5;
+			weight *= 1.2;
 			canvas.setWidth(weight);
 			System.out.println("weight = " + weight);
 		}

@@ -191,6 +191,7 @@ public class LogicVisView extends Application {
 					action.next();
 					ArrayList<GraphNode> currentNodes = action.getCurrentState();
 					display(layout, currentNodes);
+					moveButtons(button, next);
 				}
 			}	
 		});

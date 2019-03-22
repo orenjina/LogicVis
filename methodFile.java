@@ -1,3 +1,13 @@
 public class methodFile {
-int recursiveMethod(int x) {if (x < 0) return 0; return x + recursiveMethod(x - 1); }
+public static int factorial( int n, int j) {
+        if (n != 0) {
+            return n * factorial(n-1, 0);
+	}
+        else {
+            return 1;
+	}
+}
+
+
+
 }
